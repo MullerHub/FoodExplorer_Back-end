@@ -4,7 +4,8 @@ export function Details() {
 
   return (
     <>
-      <Container className={Container}>"Teste um"
+      <Container>
+        <h1>Teste um</h1>
         <p>teste de componente</p>
       </Container>
     </>
