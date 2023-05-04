@@ -16,7 +16,7 @@ const { validationResult } = require('express-validator');
 
 
 /* 
-  adminController.login = (req, res) => {
+adminController.login = (req, res) => {
   const password = req.body;
   const username = req.body;
   if (username === 'a' && password === 'as') {
