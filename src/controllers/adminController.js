@@ -7,14 +7,16 @@ const { validationResult } = require('express-validator');
     return res.status(400).json({ errors: errors.array() });
   }
   const { username, password } = req.body;
-  if (username === 'a' && password === 'as') {
+  if (username === 'renan' && password === 'silva') {
     res.send('Admin login successful');
   } else {
    res.status(401).send('Invalid username or password');
   }
 };
 
-adminController.login = (req, res) => {
+
+/* 
+  adminController.login = (req, res) => {
   const password = req.body;
   const username = req.body;
   if (username === 'a' && password === 'as') {
@@ -22,6 +24,6 @@ adminController.login = (req, res) => {
   } else {
     res.status(401).send('Invalid username or password --- TESTEE');
   }
-};
+};          */
 
 module.exports = adminController;
