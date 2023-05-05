@@ -1,9 +1,4 @@
 const path = require("path");
-
-/**
- * @type { Object.<string, import("knex").Knex.Config> }
- */
-
 module.exports = {
 
   development: {
@@ -12,7 +7,7 @@ module.exports = {
       filename: path.resolve(__dirname, "src", "database", "database.db")
     },
     migrations: {
-      filename: path.resolve(__dirname, "src", "database", "knex", "migrations")
+      directory: path.resolve(__dirname, "src", "database", "knex", "migrations")
     },
     useNullAsDefault: true,
   },
