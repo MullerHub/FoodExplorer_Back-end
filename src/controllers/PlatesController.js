@@ -15,20 +15,43 @@ class PlatesController {
   }
 
   async create(request, response) {
-    const { title, description, value } = request.body;
+    const { title, description, value, ingredients } = request.body;
     const { user_id } = request.params;
 
     // Busca de ingredientes estáticos já criados no back-end
-    const ingredientIds = [];
+    let ingredientIds = [];
+    console.log(ingredients);
 
-    for (const ingredient of ingredient) {
-      const [ingredientId] = await knex("ingredients")
-        .where("name", ingredientId)
+    /*     for (item of ingredients) {
+      const ingredient = await knex("ingredients")
+        .where("name", item)
         .pluck("id"); // mudar id por name para teste de implementação já convertida
+      ingredientIds.push(ingredient);
+    } */
 
-      ingredientIds.push(ingredientId);
-    }
+    /*    codigo trocado pelo Promise.all abaixo
+    ingredients.map(async (item) => {
+      const [ingredient] = await knex("ingredients")
+        .where("name", item)
+        .pluck("name");
+      ingredientIds.push(ingredient);
+      console.log("testing");
 
+      return ingredients;
+    });
+ */
+
+    await Promise.all(
+      ingredients.map(async (item) => {
+        const [ingredient] = await knex("ingredients")
+          .where("name", item)
+          .pluck("id"); // Alterei para pluck o ID em vez do nome
+
+        if (ingredient) {
+          ingredientIds.push(ingredient);
+        }
+      }),
+    );
     console.log("IngredientsIds => ", ingredientIds);
 
     // Erro de criação inicial por falta de parametros passados pelo cliente
@@ -45,7 +68,7 @@ class PlatesController {
       .insert({
         title,
         description,
-        // ingredientIds,
+        ingredients: JSON.stringify(ingredientIds),
         value,
         user_id,
       })
@@ -62,16 +85,16 @@ class PlatesController {
 
     console.log("Plate ingredients insert:", plateIngredientsInsert);
 
-    await knex("plates_ingredients").insert(plateIngredientsInsert);
+    //  await knex("plates_ingredients").insert(plateIngredientsInsert);
 
-    const userPlateInsert = {
+    /*  const userPlateInsert = {
       user_id,
       plate_id: plate.id,
-    };
+    }; */
 
-    await knex("plates_ingredients").insert(userPlateInsert);
+    // await knex("plates_ingredients").insert(userPlateInsert);
 
-    response.json({ plate_id: plate.id });
+    response.json({ plate_id: plate });
   }
 
   async show(request, response) {
@@ -81,6 +104,7 @@ class PlatesController {
       .join("ingredients", "plates.id", "=", "ingredients.plates_id")
       .where("plates.id", "=", id)
       .first();
+
     console.log("plate info:", plate);
 
     const ingredients = await knex("ingredients")
