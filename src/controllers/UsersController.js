@@ -1,6 +1,6 @@
-const { hash, compare } = require('bcryptjs');
-const sqliteConnection = require('../database/sqlite');
-const AppError = require('../utils/AppError');
+const { hash, compare } = require("bcryptjs");
+const sqliteConnection = require("../database/sqlite");
+const AppError = require("../utils/AppError");
 
 class UsersController {
   async create(req, res) {
@@ -9,12 +9,12 @@ class UsersController {
     const database = await sqliteConnection();
 
     const checkUserExists = await database.get(
-      'SELECT * FROM users WHERE email = (?)',
+      "SELECT * FROM users WHERE email = (?)",
       [email],
     );
 
     if (checkUserExists) {
-      throw new AppError('Este e-mail já está em uso.');
+      throw new AppError("Este e-mail já está em uso.");
     }
 
     const hashPassword = await hash(password, 4);
@@ -34,32 +34,32 @@ class UsersController {
 
       const database = await sqliteConnection();
 
-      const user = await database.get('SELECT * FROM users WHERE id = (?)', [
+      const user = await database.get("SELECT * FROM users WHERE id = (?)", [
         id,
       ]);
 
       if (!user) {
-        throw new AppError('Usuario não encontrado');
+        throw new AppError("Usuario não encontrado");
       }
 
       const userWithUpdatedEmail = await database.get(
-        'SELECT * FROM users WHERE  email = (?)',
+        "SELECT * FROM users WHERE  email = (?)",
         [email],
       );
 
       if (userWithUpdatedEmail && userWithUpdatedEmail.id !== user.id) {
-        throw new AppError('Email já está em uso.');
+        throw new AppError("Email já está em uso.");
       }
 
       if (password && !old_password) {
-        throw new AppError('Você deve informar a senha antiga');
+        throw new AppError("Você deve informar a senha antiga");
       }
 
       if (password && old_password) {
         const checkOldPassword = await compare(old_password, user.password);
 
         if (!checkOldPassword) {
-          throw new AppError('Senha antiga está incorreta');
+          throw new AppError("Senha antiga está incorreta");
         }
 
         user.password = await hash(password, 4);
