@@ -1,13 +1,14 @@
-exports.up = knex => knex.schema.createTable("plates", (table) => {
-  table.increments("id");
-  table.text("titles").notNullable();
-  table.text("description");
-  table.text("Ingredients");
-  table.float("value");
-  table.integer("user_id").references("id").inTable("users");
-  table.timestamp("created_at").default(knex.fn.now());
-  table.timestamp("updated_at").default(knex.fn.now());
-  
-});
+exports.up = (knex) =>
+  knex.schema.createTable("plates", (table) => {
+    table.increments("id");
+    table.text("title").notNullable();
+    table.text("description");
+    table.text("ingredients");
+    table.float("value");
+    table.integer('user_id').unsigned().notNullable();
+    table.foreign('user_id').references('users.id');
+    table.timestamp("created_at").default(knex.fn.now());
+    table.timestamp("updated_at").default(knex.fn.now());
+  });
 
-exports.down = knex => knex.schema.dropTable("plates");
+exports.down = (knex) => knex.schema.dropTableIfExists("plates");
