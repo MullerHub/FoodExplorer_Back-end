@@ -22,25 +22,6 @@ class PlatesController {
     let ingredientIds = [];
     console.log(ingredients);
 
-    /*     for (item of ingredients) {
-      const ingredient = await knex("ingredients")
-        .where("name", item)
-        .pluck("id"); // mudar id por name para teste de implementação já convertida
-      ingredientIds.push(ingredient);
-    } */
-
-    /*    codigo trocado pelo Promise.all abaixo
-    ingredients.map(async (item) => {
-      const [ingredient] = await knex("ingredients")
-        .where("name", item)
-        .pluck("name");
-      ingredientIds.push(ingredient);
-      console.log("testing");
-
-      return ingredients;
-    });
- */
-
     await Promise.all(
       ingredients.map(async (item) => {
         const [ingredient] = await knex("ingredients")
@@ -60,8 +41,6 @@ class PlatesController {
       throw new AppError("Não foi possivel realizar a criação do prato");
     }
 
-    // const ingredientsToString = JSON.stringify(ingredients);
-
     // Criação do prato
 
     const [plate] = await knex("plates")
@@ -74,9 +53,9 @@ class PlatesController {
       })
       .returning("id");
 
-    /*  if (!ingredientIds || ingredientIds.length === 0) {
+    if (!ingredientIds || ingredientIds.length === 0) {
       return response.status(400).json({ error: "No ingredients provided" });
-    } */
+    }
 
     const { plateIngredientsInsert } = ingredientIds.map((ingredientId) => ({
       plate_id: plate.id,
