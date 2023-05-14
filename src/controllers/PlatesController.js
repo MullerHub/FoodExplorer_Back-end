@@ -62,7 +62,7 @@ class PlatesController {
       ingredient_id: ingredientId,
     }));
 
-    console.log("Plate ingredients insert:", plateIngredientsInsert);
+    // console.log("Plate ingredients insert:", plateIngredientsInsert); Pensar se vai ser implantado
 
     //  await knex("plates_ingredients").insert(plateIngredientsInsert);
 
