@@ -21,7 +21,9 @@ class FavoritesController {
     // Adicionar o prato aos favoritos do usuário
     await knex("favorite_plates").insert({ user_id, plate_id });
 
-    response.status(201).json({ message: "Prato marcado como favorito" });
+    return response
+      .status(201)
+      .json({ message: "Prato marcado como favorito" });
   }
 
   async show(request, response) {
@@ -33,7 +35,7 @@ class FavoritesController {
       .where("favorite_plates.user_id", user_id)
       .join("plates", "favorite_plates.plate_id", "=", "plates.id");
 
-    response.json(favoritePlates);
+    return response.json(favoritePlates);
   }
 
   async delete(request, response) {
@@ -53,7 +55,9 @@ class FavoritesController {
     // Remover o prato dos favoritos do usuário
     await knex("favorite_plates").where({ user_id, plate_id }).del();
 
-    response.status(200).json({ message: "Prato removido dos favoritos" });
+    return response
+      .status(200)
+      .json({ message: "Prato removido dos favoritos" });
   }
 }
 
