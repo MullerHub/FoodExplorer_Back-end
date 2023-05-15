@@ -16,7 +16,7 @@ class PlatesController {
 
   async create(request, response) {
     const { title, description, value, ingredients } = request.body;
-    const { user_id } = request.params;
+    const user_id = request.user.id;
 
     // Busca de ingredientes estáticos já criados no back-end
     let ingredientIds = [];

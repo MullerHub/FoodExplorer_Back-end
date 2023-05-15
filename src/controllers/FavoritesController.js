@@ -2,10 +2,10 @@ const knex = require("../database/knex");
 
 class FavoritesController {
   async create(request, response) {
-    const { user_id } = request.params;
+    const user_id = request.user.id;
     const { plate_id } = request.body;
 
-    console.log("dasdfas", user_id, plate_id);
+    console.log("Teste favorites", user_id, plate_id);
 
     // Verificar se o prato já foi marcado como favorito pelo usuário
     const [existingFavorite] = await knex("favorite_plates")
@@ -27,7 +27,7 @@ class FavoritesController {
   }
 
   async show(request, response) {
-    const { user_id } = request.params;
+    const user_id = request.user.id;
 
     // Buscar a lista de pratos favoritos do usuário
     const favoritePlates = await knex("favorite_plates")
@@ -39,8 +39,8 @@ class FavoritesController {
   }
 
   async delete(request, response) {
-    const { user_id, plate_id } = request.params;
-
+    const { plate_id } = request.params;
+    const user_id = request.user.id;
     // Verificar se o prato está marcado como favorito pelo usuário
     const [existingFavorite] = await knex("favorite_plates")
       .where({ user_id, plate_id })
