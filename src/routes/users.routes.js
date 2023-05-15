@@ -8,5 +8,6 @@ const usersController = new UsersController();
 
 usersRoutes.post("/", usersController.create);
 usersRoutes.put("/:id", usersController.update);
+usersRoutes.get("/:email", usersController.show);
 
 module.exports = usersRoutes;
