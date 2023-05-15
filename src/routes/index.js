@@ -10,6 +10,6 @@ const routes = Router();
 routes.use("/users", usersRoutes);
 routes.use("/sessions", sessionsRoutes);
 routes.use("/plates", platesRoutes);
-routes.use("/users", favoriteRoutes);
+routes.use("/favorites", favoriteRoutes);
 
 module.exports = routes;
