@@ -4,7 +4,7 @@ exports.up = (knex) =>
     table.text("title").notNullable();
     table.text("description");
     table.text("ingredients");
-  //  table.varchar("picture").default(null);
+    table.varchar("picture").default(null);
     table.float("value");
     table.integer("user_id").unsigned().notNullable();
     table.foreign("user_id").references("users.id");

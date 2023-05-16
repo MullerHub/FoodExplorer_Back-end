@@ -19,20 +19,18 @@ class PlatesController {
   async create(request, response) {
     const { title, description, value, ingredients } = request.body;
     const user_id = request.user.id;
+    const picture = request.file.filename;
 
-    /*   const picture = request.file;
     const diskStorage = new DiskStorage();
 
     console.log("picture => ", picture);
 
     const filePlate = await diskStorage.saveFile(picture);
-    user.picture = filePlate;
-    const imageFilename = request.file.filename;
-    console.log("imagem qualquer =>", imageFilename);
+    console.log("filePlate => ", filePlate);
 
-    if (!request.body.picture) {
+    if (!request.file) {
       throw new AppError("Faltou adicionar uma imagem pelo menos!!");
-    } */
+    }
 
     // Busca de ingredientes estáticos já criados no back-end
     let ingredientIds = [];
@@ -65,7 +63,7 @@ class PlatesController {
         description,
         ingredients: JSON.stringify(ingredientIds),
         value,
-        // picture: picture.filename,
+        picture: filePlate,
         user_id,
       })
       .returning("id");
