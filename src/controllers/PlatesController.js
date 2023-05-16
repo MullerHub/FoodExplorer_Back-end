@@ -1,3 +1,5 @@
+const DiskStorage = require("../providers/DiskStorage");
+const AppError = require("../utils/AppError");
 const knex = require("../database/knex");
 
 class PlatesController {
@@ -18,6 +20,20 @@ class PlatesController {
     const { title, description, value, ingredients } = request.body;
     const user_id = request.user.id;
 
+    /*   const picture = request.file;
+    const diskStorage = new DiskStorage();
+
+    console.log("picture => ", picture);
+
+    const filePlate = await diskStorage.saveFile(picture);
+    user.picture = filePlate;
+    const imageFilename = request.file.filename;
+    console.log("imagem qualquer =>", imageFilename);
+
+    if (!request.body.picture) {
+      throw new AppError("Faltou adicionar uma imagem pelo menos!!");
+    } */
+
     // Busca de ingredientes estáticos já criados no back-end
     let ingredientIds = [];
     console.log(ingredients);
@@ -26,7 +42,7 @@ class PlatesController {
       ingredients.map(async (item) => {
         const [ingredient] = await knex("ingredients")
           .where("name", item)
-          .pluck("id"); // Alterei para pluck o ID em vez do nome
+          .pluck("id");
 
         if (ingredient) {
           ingredientIds.push(ingredient);
@@ -49,6 +65,7 @@ class PlatesController {
         description,
         ingredients: JSON.stringify(ingredientIds),
         value,
+        // picture: picture.filename,
         user_id,
       })
       .returning("id");
@@ -57,44 +74,25 @@ class PlatesController {
       return response.status(400).json({ error: "No ingredients provided" });
     }
 
-    const { plateIngredientsInsert } = ingredientIds.map((ingredientId) => ({
-      plate_id: plate.id,
-      ingredient_id: ingredientId,
-    }));
-
-    // console.log("Plate ingredients insert:", plateIngredientsInsert); Pensar se vai ser implantado
-
-    //  await knex("plates_ingredients").insert(plateIngredientsInsert);
-
-    /*  const userPlateInsert = {
-      user_id,
-      plate_id: plate.id,
-    }; */
-
-    // await knex("plates_ingredients").insert(userPlateInsert);
-
     return response.json({ plate_id: plate });
   }
 
   async show(request, response) {
-    const { id } = request.params;
+    const { user_id } = request.user.id;
 
-    const plate = await knex("plates")
-      .join("ingredients", "plates.id", "=", "ingredients.plates_id")
-      .where("plates.id", "=", id)
-      .first();
+    const plates = await knex("plates").select("*");
 
-    console.log("plate info:", plate);
+    console.log("plate info:", plates);
 
-    const ingredients = await knex("ingredients")
+    /* const ingredients = await knex("ingredients")
       .where({ plates_id: id })
       .orderby("name");
     const links = await knex("links")
       .where({ plates_id: id })
-      .orderby("created_at");
+      .orderby("created_at"); */
 
-    console.log(response.json());
-    return response.json();
+    // console.log(response.json());
+    return response.json(plates);
   }
 }
 
