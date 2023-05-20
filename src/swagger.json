@@ -1,0 +1,12 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "FoodExplorer Documentation back-end",
+    "description": "This is full documentation for FoodExplorer routes",
+    "version": "0.1.0",
+    "contact": {
+      "email-back-end": "mullerhub@foodexplorer.",
+      "email_front-end": "renynzera@foodexplorer"
+    }
+  }
+}

@@ -1,10 +1,13 @@
 require("express-async-errors");
-const migrationsRun = require("./database/sqlite/migrations");
+const express = require("express");
+const swaggerUi = require("swagger-ui-express");
+const swagerFile = require("./swagger.json");
+
 const AppError = require("./utils/AppError");
+const migrationsRun = require("./database/sqlite/migrations");
 const uploadConfig = require("./configs/upload");
 
 const cors = require("cors");
-const express = require("express");
 const routes = require("./routes");
 
 migrationsRun();
@@ -14,6 +17,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/files", express.static(uploadConfig.UPLOAD_FOLDER));
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swagerFile));
 
 app.use(routes);
 
@@ -35,3 +40,4 @@ app.use((error, req, res, next) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {});
+console.log(`Server is running on port => ${PORT}`);
