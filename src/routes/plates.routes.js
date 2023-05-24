@@ -13,7 +13,12 @@ const platesController = new PlatesController();
 platesRoutes.use(ensureAuthenticated);
 
 // platesRoutes.post("/", platesController.create);
-platesRoutes.post("/", upload.single("picture"), platesController.create);
+platesRoutes.post(
+  "/",
+  ensureAuthenticated,
+  upload.single("picture"),
+  platesController.create,
+);
 
 // platesRoutes.get("/:id", platesController.show);
 /* platesRoutes.post(

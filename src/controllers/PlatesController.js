@@ -21,12 +21,19 @@ class PlatesController {
     const user_id = request.user.id;
     const picture = request.file.filename;
 
+    if (!request.user.isAdmin) {
+      console.log("Valor de request.user.isAdmin:", request.user);
+      console.log("Requisição de usuário não é admin. Acesso negado.");
+      return response
+        .status(403)
+        .json({ error: "Acesso negado, você não é o admin." });
+    }
+
     const diskStorage = new DiskStorage();
 
     console.log("picture => ", picture);
 
     const filePlate = await diskStorage.saveFile(picture);
-    console.log("filePlate => ", filePlate);
 
     if (!request.file) {
       throw new AppError("Faltou adicionar uma imagem pelo menos!!");

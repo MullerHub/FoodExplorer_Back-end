@@ -22,10 +22,12 @@ class SessionsController {
 
     const { secret, expiresIn } = authConfig.jwt;
 
-    const token = sign({}, secret, {
+    const token = sign({ user }, secret, {
       subject: String(user.id),
       expiresIn,
     });
+
+    console.log("Token de login da Session ==>", token); // Verifique se o token está sendo gerado corretamente
 
     return response.status(201).json({ user, token });
   }

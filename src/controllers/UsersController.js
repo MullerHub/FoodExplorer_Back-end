@@ -4,7 +4,7 @@ const AppError = require("../utils/AppError");
 
 class UsersController {
   async create(req, res) {
-    const { name, email, password, isAdmin = false } = req.body;
+    const { name, email, password, isAdmin } = req.body;
 
     const database = await sqliteConnection();
 
@@ -18,10 +18,11 @@ class UsersController {
     }
 
     const hashPassword = await hash(password, 8);
+    const userIsAdmin = isAdmin === true; // Verifica se isAdmin é explicitamente true
 
     await database.run(
       `INSERT INTO users (NAME, email, password, isAdmin) VALUES (?, ?, ?, ?)`,
-      [name, email, hashPassword, isAdmin],
+      [name, email, hashPassword, userIsAdmin],
     );
 
     return res.status(201).json();
@@ -45,8 +46,8 @@ class UsersController {
 
   async update(req, res) {
     try {
-      const { name, email, password, old_password } = req.body;
-      const user_id = request.user.id;
+      const { name, email, password, old_password, isAdmin } = req.body;
+      const user_id = req.user.id;
 
       const database = await sqliteConnection();
 
@@ -84,19 +85,25 @@ class UsersController {
       user.name = name ?? user.name;
       user.email = email ?? user.email;
 
+      if (isAdmin !== undefined) {
+        user.isAdmin = isAdmin;
+      }
+
       await database.run(
         `
   UPDATE users SET
   name = ?,
   email = ?,
   password = ?,
+  isAdmin = ?,
   updated_at = DATETIME("now")
   WHERE id = ?`,
-        [user.name, user.email, user.password, user_id],
+        [user.name, user.email, user.password, user.isAdmin, user_id],
       );
 
       return res.json({});
     } catch (error) {
+      console.log("update user error: " + error);
       return res.status(400).json({ message: error.message });
     }
   }

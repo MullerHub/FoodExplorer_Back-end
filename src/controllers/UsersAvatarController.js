@@ -1,4 +1,4 @@
-const AppError = require("../utils/AppError");
+/* const AppError = require("../utils/AppError");
 const knex = require("../database/knex");
 const DiskStorage = require("../providers/DiskStorage").default;
 
@@ -29,3 +29,4 @@ class UsersAvatarController {
 }
 
 module.exports = UsersAvatarController;
+ */
