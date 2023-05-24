@@ -17,7 +17,7 @@ class PlatesController {
   }
 
   async create(request, response) {
-    const { title, description, value, ingredients } = request.body;
+    const { title, description, value, ingredients, categories } = request.body;
     const user_id = request.user.id;
     const picture = request.file.filename;
 
@@ -31,17 +31,15 @@ class PlatesController {
 
     const diskStorage = new DiskStorage();
 
-    console.log("picture => ", picture);
-
     const filePlate = await diskStorage.saveFile(picture);
 
     if (!request.file) {
       throw new AppError("Faltou adicionar uma imagem pelo menos!!");
     }
 
-    // Busca de ingredientes estáticos já criados no back-end
+    // Busca de ingredientes estáticos já criados no back-end e retornado o id
     let ingredientIds = [];
-    console.log(ingredients);
+    console.log(categories);
 
     await Promise.all(
       ingredients.map(async (item) => {
@@ -56,8 +54,39 @@ class PlatesController {
     );
     console.log("IngredientsIds => ", ingredientIds);
 
-    // Erro de criação inicial por falta de parametros passados pelo cliente
+    // Verificar se pelo menos uma categoria foi fornecida
+    if (!categories || categories.length === 0) {
+      return response
+        .status(400)
+        .json({ error: "Não foi passado nenhuma categoria" });
+    }
 
+    // Verificar se categories é uma string
+    if (typeof categories !== "string") {
+      return response
+        .status(400)
+        .json({ error: "Categories não é uma string" });
+    }
+
+    // Obter o ID da categoria com base no nome fornecido
+    const [category] = await knex("categories")
+      .where("name", categories)
+      .pluck("id");
+
+    if (!category) {
+      return response
+        .status(400)
+        .json({ error: "Não foi passado nenhuma categoria" });
+    }
+
+    // Verificar se pelo menos uma categoria válida foi encontrada
+    if (category.length === 0) {
+      return response
+        .status(400)
+        .json({ error: "Nenhuma categoria válida foi passada" });
+    }
+
+    // Erro de criação inicial por falta de parametros passados pelo cliente
     if (!title || !value || !description) {
       throw new AppError("Não foi possivel realizar a criação do prato");
     }
@@ -72,11 +101,14 @@ class PlatesController {
         value,
         picture: filePlate,
         user_id,
+        category_id: category,
       })
       .returning("id");
 
     if (!ingredientIds || ingredientIds.length === 0) {
-      return response.status(400).json({ error: "No ingredients provided" });
+      return response
+        .status(400)
+        .json({ error: "Não foi passado nenhum ingrediente válido" });
     }
 
     return response.json({ plate_id: plate });
