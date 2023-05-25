@@ -101,37 +101,23 @@ class PlatesController {
     return response.json({ plate_id: plate });
   }
 
-  async show(request, response) {
-    const plates = await knex("plates").select("*");
-
-    return response.json(plates);
-  }
-
-  async index(request, response) {
-    const { id } = request.params;
-
-    let plates;
-
-    if (id) {
-      plates = await knex("plates").where({ id });
-    } else {
-      plates = await knex("plates");
-    }
-
-    return response.json(plates);
-  }
-
   async update(request, response) {
     const { id } = request.params;
     const { title, description, value, ingredients, categories } = request.body;
+    const user_id = request.user.id;
 
-    if (!request.user.isAdmin) {
-      console.log("Valor de request.user.isAdmin:", request.user);
-      console.log("Requisição de usuário não é admin. Acesso negado.");
+    const plate = await knex("plates").where({ id }).first();
+
+    if (!plate) {
+      return response.status(404).json({ error: "Prato não encontrado" });
+    }
+
+    if (plate.user_id !== user_id) {
       return response
         .status(403)
-        .json({ error: "Acesso negado, você não é o admin." });
+        .json({ error: "Acesso negado, você não é o dono deste prato" });
     }
+
     const diskStorage = new DiskStorage();
 
     if (request.file) {
@@ -156,7 +142,6 @@ class PlatesController {
       }
 
       if (ingredients) {
-        // Busca de ingredientes estáticos já criados no back-end e retornado o id
         const ingredientIds = [];
 
         await Promise.all(
@@ -193,6 +178,26 @@ class PlatesController {
     }
 
     return response.json({ success: true });
+  }
+
+  async show(request, response) {
+    const plates = await knex("plates").select("*");
+
+    return response.json(plates);
+  }
+
+  async index(request, response) {
+    const { id } = request.params;
+
+    let plates;
+
+    if (id) {
+      plates = await knex("plates").where({ id });
+    } else {
+      plates = await knex("plates");
+    }
+
+    return response.json(plates);
   }
 }
 
