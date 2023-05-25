@@ -16,10 +16,16 @@ platesRoutes.post(
   upload.single("picture"),
   platesController.create,
 );
-platesRoutes.get("/:id", platesController.index);
-
 platesRoutes.get("/", platesController.show);
 
-// platesRoutes.put("/:id", platesController.update);
+platesRoutes.get("/:id", platesController.index);
+
+platesRoutes.put(
+  "/:id",
+  ensureAuthenticated,
+  upload.single("picture"),
+
+  platesController.update,
+);
 
 module.exports = platesRoutes;

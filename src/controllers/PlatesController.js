@@ -120,6 +120,80 @@ class PlatesController {
 
     return response.json(plates);
   }
+
+  async update(request, response) {
+    const { id } = request.params;
+    const { title, description, value, ingredients, categories } = request.body;
+
+    if (!request.user.isAdmin) {
+      console.log("Valor de request.user.isAdmin:", request.user);
+      console.log("Requisição de usuário não é admin. Acesso negado.");
+      return response
+        .status(403)
+        .json({ error: "Acesso negado, você não é o admin." });
+    }
+    const diskStorage = new DiskStorage();
+
+    if (request.file) {
+      const picture = request.file.filename;
+      const filePlate = await diskStorage.saveFile(picture);
+      await knex("plates").where({ id }).update({ picture: filePlate });
+    }
+
+    if (title || description || value || ingredients || categories) {
+      const updateData = {};
+
+      if (title) {
+        updateData.title = title;
+      }
+
+      if (description) {
+        updateData.description = description;
+      }
+
+      if (value) {
+        updateData.value = value;
+      }
+
+      if (ingredients) {
+        // Busca de ingredientes estáticos já criados no back-end e retornado o id
+        const ingredientIds = [];
+
+        await Promise.all(
+          ingredients.map(async (item) => {
+            const [ingredient] = await knex("ingredients")
+              .where("name", item)
+              .pluck("id");
+
+            if (ingredient) {
+              ingredientIds.push(ingredient);
+            }
+          }),
+        );
+
+        updateData.ingredients = JSON.stringify(ingredientIds);
+      }
+
+      if (categories) {
+        // Obter o ID da categoria com base no nome fornecido
+        const [category] = await knex("categories")
+          .where("name", categories)
+          .pluck("id");
+
+        if (!category) {
+          return response
+            .status(400)
+            .json({ error: "Não foi passada nenhuma categoria" });
+        }
+
+        updateData.category_id = category;
+      }
+
+      await knex("plates").where({ id }).update(updateData);
+    }
+
+    return response.json({ success: true });
+  }
 }
 
 module.exports = PlatesController;

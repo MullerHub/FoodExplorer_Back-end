@@ -20,7 +20,7 @@ async function ensureAuthenticated(request, response, next) {
     };
     return next();
   } catch {
-    throw new AppError("JWT token inválidoo", 401);
+    throw new AppError("JWT token inválido, Erro no middleware", 401);
   }
 }
 
