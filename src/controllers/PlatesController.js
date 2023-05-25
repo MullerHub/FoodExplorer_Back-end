@@ -3,19 +3,6 @@ const AppError = require("../utils/AppError");
 const knex = require("../database/knex");
 
 class PlatesController {
-  async index(request, response) {
-    const { title } = request.query;
-
-    let plates;
-
-    if (title) {
-      plates = await knex("plates").whereLike("plates.title", `%${title}%`);
-    } else {
-      plates = await knex("plates");
-    }
-    return response.json(plates);
-  }
-
   async create(request, response) {
     const { title, description, value, ingredients, categories } = request.body;
     const user_id = request.user.id;
@@ -115,20 +102,22 @@ class PlatesController {
   }
 
   async show(request, response) {
-    const { user_id } = request.user.id;
-
     const plates = await knex("plates").select("*");
 
-    console.log("plate info:", plates);
+    return response.json(plates);
+  }
 
-    /* const ingredients = await knex("ingredients")
-      .where({ plates_id: id })
-      .orderby("name");
-    const links = await knex("links")
-      .where({ plates_id: id })
-      .orderby("created_at"); */
+  async index(request, response) {
+    const { id } = request.params;
 
-    // console.log(response.json());
+    let plates;
+
+    if (id) {
+      plates = await knex("plates").where({ id });
+    } else {
+      plates = await knex("plates");
+    }
+
     return response.json(plates);
   }
 }
