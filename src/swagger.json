@@ -35,6 +35,42 @@
             "description": "Internal server error"
           }
         }
+      },
+      "put": {
+        "summary": "Update user",
+        "description": "Update the details of the logged-in user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUser"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "User updated successfully"
+          },
+          "400": {
+            "description": "Bad request. Invalid input data"
+          },
+          "401": {
+            "description": "Unauthorized. User must be logged in"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
       }
     }
   },
@@ -65,6 +101,36 @@
           }
         },
         "required": ["name", "email", "password"]
+      },
+      "UpdateUser": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "John Doe",
+            "description": "The updated name of the user"
+          },
+          "email": {
+            "type": "string",
+            "example": "john@example.com",
+            "description": "The updated email address of the user"
+          },
+          "password": {
+            "type": "string",
+            "example": "newpassword123",
+            "description": "The updated password of the user"
+          },
+          "old_password": {
+            "type": "string",
+            "example": "oldpassword123",
+            "description": "The old password of the user (required when updating password)"
+          },
+          "isAdmin": {
+            "type": "boolean",
+            "example": true,
+            "description": "Indicates if the user is an admin"
+          }
+        }
       }
     }
   }
