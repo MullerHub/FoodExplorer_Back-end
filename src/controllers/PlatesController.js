@@ -101,6 +101,26 @@ class PlatesController {
     return response.json({ plate_id: plate });
   }
 
+  async show(request, response) {
+    const plates = await knex("plates").select("*");
+
+    return response.json(plates);
+  }
+
+  async index(request, response) {
+    const { id } = request.params;
+
+    let plates;
+
+    if (id) {
+      plates = await knex("plates").where({ id });
+    } else {
+      plates = await knex("plates");
+    }
+
+    return response.json(plates);
+  }
+
   async update(request, response) {
     const { id } = request.params;
     const { title, description, value, ingredients, categories } = request.body;
@@ -178,26 +198,6 @@ class PlatesController {
     }
 
     return response.json({ success: true });
-  }
-
-  async show(request, response) {
-    const plates = await knex("plates").select("*");
-
-    return response.json(plates);
-  }
-
-  async index(request, response) {
-    const { id } = request.params;
-
-    let plates;
-
-    if (id) {
-      plates = await knex("plates").where({ id });
-    } else {
-      plates = await knex("plates");
-    }
-
-    return response.json(plates);
   }
 }
 
