@@ -198,7 +198,6 @@ class PlatesController {
 
       await knex("plates").where({ id }).update(updateData);
     }
-
     return response.json({ success: true });
   }
 }

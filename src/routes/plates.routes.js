@@ -25,7 +25,6 @@ platesRoutes.put(
   "/:id",
   ensureAuthenticated,
   upload.single("picture"),
-
   platesController.update,
 );
 

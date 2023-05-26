@@ -12,6 +12,7 @@ class FavoritesController {
 
     return response.json(favoritePlates);
   }
+
   async create(request, response) {
     const user_id = request.user.id;
     const { plate_id } = request.body;

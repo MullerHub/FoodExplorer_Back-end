@@ -275,7 +275,7 @@
             "name": "id",
             "in": "path",
             "description": "ID of the plate to retrieve",
-            "required": false,
+            "required": true,
             "schema": {
               "type": "integer"
             }
@@ -307,6 +307,12 @@
       "put": {
         "tags": ["Plates"],
         "summary": "Update a plate",
+        "description": "Updated plate",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -316,78 +322,63 @@
             "schema": {
               "type": "integer"
             }
-          },
-          {
-            "name": "picture",
-            "in": "formData",
-            "description": "Plate picture file",
-            "required": false,
-            "schema": {
-              "type": "file"
-            }
-          },
-          {
-            "name": "title",
-            "in": "formData",
-            "description": "Plate title",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "description",
-            "in": "formData",
-            "description": "Plate description",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "value",
-            "in": "formData",
-            "description": "Plate value",
-            "required": false,
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "ingredients",
-            "in": "formData",
-            "description": "Plate ingredients",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "categories",
-            "in": "formData",
-            "description": "Plate categories",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
           }
         ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "The title of the plate"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "The description of the plate"
+                  },
+                  "value": {
+                    "type": "number",
+                    "description": "The value of the plate"
+                  },
+                  "ingredients": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "The ingredients of the plate",
+                    "collectionFormat": "multi"
+                  },
+                  "categories": {
+                    "type": "string",
+                    "description": "The categories of the plate"
+                  },
+                  "picture": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The picture of the plate"
+                  }
+                },
+                "required": [
+                  "title",
+                  "description",
+                  "value",
+                  "ingredients",
+                  "categories",
+                  "picture"
+                ]
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Plate updated successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "description": "Indicates if the update was successful"
-                    }
-                  }
+                  "$ref": "#/components/schemas/Plate"
                 }
               }
             }
@@ -425,7 +416,7 @@
         }
       }
     },
-    "/favorite_plates": {
+    "/favorites/favorite_plates": {
       "post": {
         "tags": ["Favorites"],
         "summary": "Adicionar um prato aos favoritos do usuário",
@@ -510,9 +501,7 @@
             "description": "Não autorizado - Token de acesso inválido"
           }
         }
-      }
-    },
-    "/favorites/favorite_plates": {
+      },
       "delete": {
         "summary": "Exclui um prato dos favoritos",
         "tags": ["Favorites"],
@@ -687,6 +676,40 @@
           "category_id": {
             "type": "integer",
             "description": "The ID of the category associated with the plate"
+          }
+        }
+      },
+      "PlateUpdate": {
+        "type": "object",
+        "properties": {
+          "picture": {
+            "type": "string",
+            "format": "binary",
+            "description": "The updated picture of the plate"
+          },
+          "title": {
+            "type": "string",
+            "description": "The updated title of the plate"
+          },
+          "description": {
+            "type": "string",
+            "description": "The updated description of the plate"
+          },
+          "value": {
+            "type": "number",
+            "description": "The updated value of the plate"
+          },
+          "ingredients": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The updated ingredients of the plate",
+            "collectionFormat": "multi"
+          },
+          "categories": {
+            "type": "string",
+            "description": "The updated categories of the plate"
           }
         }
       },
