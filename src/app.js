@@ -2,6 +2,7 @@ require("express-async-errors");
 const express = require("express");
 const swaggerUi = require("swagger-ui-express");
 const swagerFile = require("./swagger.json");
+const swagerFilePtBr = require("./swagger_pt-br.json");
 
 const AppError = require("./utils/AppError");
 const migrationsRun = require("./database/sqlite/migrations");
@@ -18,7 +19,8 @@ app.use(express.json());
 
 app.use("/files", express.static(uploadConfig.UPLOAD_FOLDER));
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swagerFile));
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swagerFile));
+app.use("/docs.pt-br", swaggerUi.serve, swaggerUi.setup(swagerFilePtBr));
 
 app.use(routes);
 

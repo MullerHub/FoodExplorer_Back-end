@@ -1,19 +1,18 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "FoodExplorer Documentation back-end",
-    "description": "This is full documentation for FoodExplorer routes",
+    "title": "Documentação do Back-end FoodExplorer",
+    "description": "Está é a documentação completa das rotas dentro do FoodExplorer",
     "version": "0.1.0",
     "contact": {
-      "email-back-end": "mullerhub@foodexplorer.com",
-      "email_front-end": "renynzera@foodexplorer.com"
+      "email": "murilo.murilomuller@gmail.com"
     }
   },
   "paths": {
     "/users": {
       "post": {
-        "summary": "Create a new user",
-        "description": "Create a new user with the provided information",
+        "summary": "Cria um novo usuario",
+        "description": "Cria um novo usuario com as informações passadas",
         "requestBody": {
           "content": {
             "application/json": {
@@ -26,18 +25,18 @@
         },
         "responses": {
           "201": {
-            "description": "User created successfully"
+            "description": "Usuario criado com sucesso"
           },
           "400": {
-            "description": "Bad request. Invalid input data"
+            "description": "Bad request/Erro de requisição : Dados passados pelo input Invalido"
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error / Erro interno do servidor"
           }
         }
       },
       "put": {
-        "summary": "Update user",
+        "summary": "Atualizar Usuario",
         "description": "Update the details of the logged-in user",
         "security": [
           {
