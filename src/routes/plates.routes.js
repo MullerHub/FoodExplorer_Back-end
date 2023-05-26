@@ -16,6 +16,7 @@ platesRoutes.post(
   upload.single("picture"),
   platesController.create,
 );
+
 platesRoutes.get("/", platesController.show);
 
 platesRoutes.get("/:id", platesController.index);

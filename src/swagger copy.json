@@ -1,0 +1,114 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "FoodExplorer Documentation back-end",
+    "description": "This is full documentation for FoodExplorer routes",
+    "version": "0.1.0",
+    "contact": {
+      "email-back-end": "mullerhub@foodexplorer.com",
+      "email_front-end": "renynzera@foodexplorer.com"
+    }
+  },
+  "paths": {
+    "/plates": {
+      "post": {
+        "summary": "Create a new plate",
+        "description": "Create a new plate with the provided information",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "The title of the plate"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "The description of the plate"
+                  },
+                  "value": {
+                    "type": "number",
+                    "description": "The value of the plate"
+                  },
+                  "ingredients": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "The ingredients of the plate"
+                  },
+                  "categories": {
+                    "type": "string",
+                    "description": "The categories of the plate"
+                  },
+                  "picture": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The picture of the plate"
+                  }
+                },
+                "required": [
+                  "title",
+                  "description",
+                  "value",
+                  "ingredients",
+                  "categories",
+                  "picture"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Plate created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Plate"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Plate": {
+        "type": "object",
+        "properties": {
+          "plate_id": {
+            "type": "integer",
+            "example": 1,
+            "description": "The unique identifier of the plate"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
