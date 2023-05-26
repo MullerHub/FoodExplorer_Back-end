@@ -26,10 +26,11 @@ class PlatesController {
 
     // Busca de ingredientes estáticos já criados no back-end e retornado o id
     let ingredientIds = [];
-    console.log(categories);
+    console.log(ingredients);
+    const ingredientSplit = ingredients.split(",");
 
     await Promise.all(
-      ingredients.map(async (item) => {
+      ingredientSplit.map(async (item) => {
         const [ingredient] = await knex("ingredients")
           .where("name", item)
           .pluck("id");
@@ -163,9 +164,10 @@ class PlatesController {
 
       if (ingredients) {
         const ingredientIds = [];
+        const ingredientSplit = ingredients.split(",");
 
         await Promise.all(
-          ingredients.map(async (item) => {
+          ingredientSplit.map(async (item) => {
             const [ingredient] = await knex("ingredients")
               .where("name", item)
               .pluck("id");

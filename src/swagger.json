@@ -189,7 +189,8 @@
                     "items": {
                       "type": "string"
                     },
-                    "description": "The ingredients of the plate"
+                    "description": "The ingredients of the plate",
+                    "collectionFormat": "multi"
                   },
                   "categories": {
                     "type": "string",
