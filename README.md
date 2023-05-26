@@ -19,6 +19,12 @@ npm run dev
 
 E para rodar o servidor e coloque a seguinte url em qualquer navegador:
 
+# Documentação em inglês
 ```
-http://localhost:3000/api-docs/
+http://localhost:3000/docs
+```
+
+# Documentação em Português brasileiro
+```
+http://localhost:3000/docs.br
 ```
