@@ -12,6 +12,7 @@
   "paths": {
     "/users": {
       "post": {
+        "tags": ["Users"],
         "summary": "Create a new user",
         "description": "Create a new user with the provided information",
         "requestBody": {
@@ -37,6 +38,7 @@
         }
       },
       "put": {
+        "tags": ["Users"],
         "summary": "Update user",
         "description": "Update the details of the logged-in user",
         "security": [
@@ -75,6 +77,7 @@
     },
     "/users/{email}": {
       "get": {
+        "tags": ["Users"],
         "summary": "Get user by email",
         "description": "Retrieve a user by their email address",
         "parameters": [
@@ -110,6 +113,7 @@
     },
     "/sessions": {
       "post": {
+        "tags": ["Sessions"],
         "summary": "User login",
         "description": "Authenticate a user and generate an access token",
         "requestBody": {
@@ -154,6 +158,7 @@
     },
     "/plates": {
       "post": {
+        "tags": ["Plates"],
         "summary": "Create a new plate",
         "description": "Create a new plate with the provided information",
         "security": [
@@ -231,6 +236,7 @@
         }
       },
       "get": {
+        "tags": ["Plates"],
         "summary": "Get all plates",
         "responses": {
           "200": {
@@ -261,6 +267,7 @@
     },
     "/plates/{id}": {
       "get": {
+        "tags": ["Plates"],
         "summary": "Get plate details",
         "parameters": [
           {
@@ -297,6 +304,7 @@
         }
       },
       "put": {
+        "tags": ["Plates"],
         "summary": "Update a plate",
         "parameters": [
           {
@@ -405,6 +413,55 @@
           },
           "404": {
             "description": "Plate not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/favorite_plates": {
+      "post": {
+        "tags": ["Favorites"],
+        "summary": "Adicionar um prato aos favoritos do usuário",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FavoritePlate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Prato marcado como favorito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Mensagem de sucesso"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro ao marcar o prato como favorito",
             "content": {
               "application/json": {
                 "schema": {
@@ -544,6 +601,16 @@
             "description": "The ID of the category associated with the plate"
           }
         }
+      },
+      "FavoritePlate": {
+        "type": "object",
+        "properties": {
+          "plate_id": {
+            "type": "integer",
+            "description": "ID do prato a ser marcado como favorito"
+          }
+        },
+        "required": ["plate_id"]
       },
       "Error": {
         "type": "object",
