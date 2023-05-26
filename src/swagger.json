@@ -258,6 +258,44 @@
           }
         }
       }
+    },
+    "/plates/{id}": {
+      "get": {
+        "summary": "Get plate details",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the plate to retrieve",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Plate details retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Plate"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Plate not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -318,7 +356,6 @@
           }
         }
       },
-
       "LoginResponse": {
         "type": "object",
         "properties": {
