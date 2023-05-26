@@ -163,7 +163,7 @@
         "description": "Create a new plate with the provided information",
         "security": [
           {
-            "BearerAuth": []
+            "bearerAuth": []
           }
         ],
         "requestBody": {
@@ -510,9 +510,58 @@
           }
         }
       }
+    },
+    "/favorites/favorite_plates": {
+      "delete": {
+        "summary": "Exclui um prato dos favoritos",
+        "tags": ["Favorites"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "ID do prato a ser excluído dos favoritos",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "plate_id": {
+                    "type": "integer",
+                    "description": "ID do prato a ser excluído"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Prato removido dos favoritos"
+          },
+          "400": {
+            "description": "Prato não está marcado como favorito"
+          },
+          "401": {
+            "description": "Não autorizado"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      }
     }
   },
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
     "schemas": {
       "User": {
         "type": "object",
@@ -660,5 +709,10 @@
         }
       }
     }
-  }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ]
 }
