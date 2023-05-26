@@ -2,7 +2,7 @@ require("express-async-errors");
 const express = require("express");
 const swaggerUi = require("swagger-ui-express");
 const swagerFile = require("./swagger.json");
-const swagerFilePtBr = require("./swagger_pt-br.json");
+//const swagerFilePtBr = require("./swagger_pt-br.json");
 
 const AppError = require("./utils/AppError");
 const migrationsRun = require("./database/sqlite/migrations");
@@ -19,8 +19,9 @@ app.use(express.json());
 
 app.use("/files", express.static(uploadConfig.UPLOAD_FOLDER));
 
+// app.use("/docs.br", swaggerUi.serve, swaggerUi.setup(swagerFilePtBr));
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swagerFile));
-app.use("/docs.br", swaggerUi.serve, swaggerUi.setup(swagerFilePtBr)); // está com erro, a docs em ingles antes dessa linha nunca será lida, essa está sobreescrevendo o link anterior, preciso corrigir
+// está com erro, a docs em ingles antes dessa linha nunca será lida, essa está sobreescrevendo o link anterior, preciso corrigir
 
 app.use(routes);
 

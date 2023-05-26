@@ -229,6 +229,34 @@
             "description": "Internal server error"
           }
         }
+      },
+      "get": {
+        "summary": "Get all plates",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Plate"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
       }
     }
   },
@@ -318,6 +346,55 @@
             "type": "string",
             "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
             "description": "The access token for authentication"
+          }
+        }
+      },
+      "Plate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The plate's ID"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the plate"
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the plate"
+          },
+          "value": {
+            "type": "number",
+            "description": "The value of the plate"
+          },
+          "ingredients": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The ingredients of the plate"
+          },
+          "picture": {
+            "type": "string",
+            "description": "The picture filename of the plate"
+          },
+          "user_id": {
+            "type": "integer",
+            "description": "The ID of the user who created the plate"
+          },
+          "category_id": {
+            "type": "integer",
+            "description": "The ID of the category associated with the plate"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Error message"
           }
         }
       }
