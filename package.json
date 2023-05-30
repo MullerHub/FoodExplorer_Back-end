@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./src/app.js",
+    "start": "node ./functions/src/app.js",
     "migrate": "knex migrate:latest ",
     "create-migrate": "npx knex migrate:make",
-    "dev": "nodemon ./src/app"
+    "dev": "nodemon ./functions/src/app"
   },
   "repository": {
     "type": "git",

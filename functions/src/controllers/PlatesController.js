@@ -1,3 +1,4 @@
+/* eslint-disable */
 const DiskStorage = require("../providers/DiskStorage");
 const AppError = require("../utils/AppError");
 const knex = require("../database/knex");

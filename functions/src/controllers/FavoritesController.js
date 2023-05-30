@@ -1,3 +1,4 @@
+/* eslint-disable */
 const knex = require("../database/knex");
 
 class FavoritesController {
