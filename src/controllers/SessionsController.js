@@ -27,8 +27,6 @@ class SessionsController {
       expiresIn,
     });
 
-    console.log("Token de login da Session ==>", token); // Verifique se o token está sendo gerado corretamente
-
     return response.status(201).json({ user, token });
   }
 }

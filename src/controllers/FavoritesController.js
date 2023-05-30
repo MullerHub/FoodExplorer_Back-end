@@ -17,8 +17,6 @@ class FavoritesController {
     const user_id = request.user.id;
     const { plate_id } = request.body;
 
-    console.log("Teste favorites", user_id, plate_id);
-
     // Verificar se o prato já foi marcado como favorito pelo usuário
     const [existingFavorite] = await knex("favorite_plates")
       .where({ user_id, plate_id })

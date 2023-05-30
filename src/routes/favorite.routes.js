@@ -21,6 +21,4 @@ favoriteRoutes.delete(
   favoritesController.delete,
 );
 
-// favoriteRoutes.put("/:id", favoritesController.update);
-
 module.exports = favoriteRoutes;

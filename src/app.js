@@ -19,8 +19,6 @@ app.use(express.json());
 
 app.use("/files", express.static(uploadConfig.UPLOAD_FOLDER));
 
-// app.use("/docs/en", swaggerUi.serve, swaggerUi.setup(swagerFile));
-
 app.use("/docs/en", swaggerUi.serve, (req, res) => {
   let html = swaggerUi.generateHTML(swagerFile);
   res.send(html);
@@ -30,10 +28,6 @@ app.use("/docs/pt-br", swaggerUi.serve, (req, res) => {
   let html = swaggerUi.generateHTML(swagerFilePtBr);
   res.send(html);
 });
-
-//app.use("/docs/pt-br", swaggerUi.serve, swaggerUi.setup(swagerFilePtBr));
-
-// está com erro, a docs em ingles antes dessa linha nunca será lida, essa está sobreescrevendo o link anterior, preciso corrigir
 
 app.use(routes);
 

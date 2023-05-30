@@ -4,12 +4,10 @@ const uploadConfig = require("../configs/upload");
 
 class DiskStorage {
   async saveFile(file) {
-    console.log("saveFile não chegando:");
     await fs.promises.rename(
       path.resolve(uploadConfig.TMP_FOLDER, file),
       path.resolve(uploadConfig.UPLOAD_FOLDER, file),
     );
-    console.log("saveFile chegando => ", file);
     return file;
   }
 
