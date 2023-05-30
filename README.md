@@ -17,7 +17,7 @@ https://foodexplorerback-end-production.up.railway.app/docs/pt-br/
 </br>
 </br>
 
-Comandos para testar o back-end
+Comandos para testar o back-end localmente (em localhost)
 
 Baixar as migrations para ter todo o banco de dados padrão
 ```
