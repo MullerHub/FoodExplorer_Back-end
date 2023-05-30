@@ -1,5 +1,7 @@
 # FoodExplorer_Back-end
 
+</br>
+
 # Deploy online nas rotas:
 
 ## Documentação em inglês
@@ -12,6 +14,8 @@ https://foodexplorerback-end-production.up.railway.app/docs/en
 https://foodexplorerback-end-production.up.railway.app/docs/pt-br/
 ```
 
+</br>
+</br>
 
 Comandos para testar o back-end
 
