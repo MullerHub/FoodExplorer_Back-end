@@ -1,5 +1,18 @@
 # FoodExplorer_Back-end
 
+# Deploy online nas rotas:
+
+## Documentação em inglês
+```
+https://foodexplorerback-end-production.up.railway.app/docs/en
+```
+
+## Documentação em Português brasileiro
+```
+https://foodexplorerback-end-production.up.railway.app/docs/pt-br/
+```
+
+
 Comandos para testar o back-end
 
 Baixar as migrations para ter todo o banco de dados padrão
