@@ -1,28 +1,29 @@
 const { hash, compare } = require("bcryptjs");
-const sqliteConnection = require("../database/sqlite");
+const mySqlConnection = require("../database/mysql_planetScale");
 const AppError = require("../utils/AppError");
 
 class UsersController {
   async create(req, res) {
     const { name, email, password, isAdmin } = req.body;
 
-    const database = await sqliteConnection();
+    const database = await mySqlConnection();
 
-    const checkUserExists = await database.get(
-      "SELECT * FROM users WHERE email = (?)",
-      [email],
-    );
+    const result = await database.query("SELECT * FROM users WHERE email = ?", [
+      email,
+    ]);
 
-    if (checkUserExists) {
+    const [existingUser] = Array.isArray(result) ? result : [];
+
+    if (existingUser) {
       throw new AppError("Este e-mail já está em uso.");
     }
 
-    const hashPassword = await hash(password, 8);
-    const userIsAdmin = isAdmin === true; // Verifica se isAdmin é explicitamente true
+    const hashedPassword = await hash(password, 8);
+    const userIsAdmin = isAdmin === true;
 
-    await database.run(
-      `INSERT INTO users (NAME, email, password, isAdmin) VALUES (?, ?, ?, ?)`,
-      [name, email, hashPassword, userIsAdmin],
+    await database.query(
+      `INSERT INTO users (name, email, password, isAdmin) VALUES (?, ?, ?, ?)`,
+      [name, email, hashedPassword, userIsAdmin],
     );
 
     return res.status(201).json();
@@ -31,9 +32,9 @@ class UsersController {
   async show(req, res) {
     const { email } = req.params;
 
-    const database = await sqliteConnection();
+    const database = await mySqlConnection();
 
-    const user = await database.get("SELECT * FROM users WHERE email = (?)", [
+    const [user] = await database.query("SELECT * FROM users WHERE email = ?", [
       email,
     ]);
 
@@ -49,18 +50,18 @@ class UsersController {
       const { name, email, password, old_password, isAdmin } = req.body;
       const user_id = req.user.id;
 
-      const database = await sqliteConnection();
+      const database = await mySqlConnection();
 
-      const user = await database.get("SELECT * FROM users WHERE id = (?)", [
+      const [user] = await database.query("SELECT * FROM users WHERE id = ?", [
         user_id,
       ]);
 
       if (!user) {
-        throw new AppError("Usuario não encontrado");
+        throw new AppError("Usuário não encontrado.");
       }
 
-      const userWithUpdatedEmail = await database.get(
-        "SELECT * FROM users WHERE  email = (?)",
+      const [userWithUpdatedEmail] = await database.query(
+        "SELECT * FROM users WHERE email = ?",
         [email],
       );
 
@@ -73,9 +74,9 @@ class UsersController {
       }
 
       if (password && old_password) {
-        const checkOldPassword = await compare(old_password, user.password);
+        const isOldPasswordValid = await compare(old_password, user.password);
 
-        if (!checkOldPassword) {
+        if (!isOldPasswordValid) {
           throw new AppError("Senha antiga está incorreta");
         }
 
@@ -89,15 +90,15 @@ class UsersController {
         user.isAdmin = isAdmin;
       }
 
-      await database.run(
+      await database.query(
         `
-  UPDATE users SET
-  name = ?,
-  email = ?,
-  password = ?,
-  isAdmin = ?,
-  updated_at = DATETIME("now")
-  WHERE id = ?`,
+        UPDATE users SET
+        name = ?,
+        email = ?,
+        password = ?,
+        isAdmin = ?,
+        updated_at = NOW()
+        WHERE id = ?`,
         [user.name, user.email, user.password, user.isAdmin, user_id],
       );
 

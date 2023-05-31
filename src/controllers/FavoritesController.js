@@ -1,18 +1,6 @@
 const knex = require("../database/knex");
 
 class FavoritesController {
-  async show(request, response) {
-    const user_id = request.user.id;
-
-    // Buscar a lista de pratos favoritos do usuário
-    const favoritePlates = await knex("favorite_plates")
-      .select("plates.*")
-      .where("favorite_plates.user_id", user_id)
-      .join("plates", "favorite_plates.plate_id", "=", "plates.id");
-
-    return response.json(favoritePlates);
-  }
-
   async create(request, response) {
     const user_id = request.user.id;
     const { plate_id } = request.body;
@@ -34,6 +22,18 @@ class FavoritesController {
     return response
       .status(201)
       .json({ message: "Prato marcado como favorito" });
+  }
+
+  async show(request, response) {
+    const user_id = request.user.id;
+
+    // Buscar a lista de pratos favoritos do usuário
+    const favoritePlates = await knex("favorite_plates")
+      .select("plates.*")
+      .where("favorite_plates.user_id", user_id)
+      .join("plates", "favorite_plates.plate_id", "=", "plates.id");
+
+    return response.json(favoritePlates);
   }
 
   async delete(request, response) {

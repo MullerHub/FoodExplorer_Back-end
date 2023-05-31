@@ -79,8 +79,14 @@ class PlatesController {
       throw new AppError("Não foi possivel realizar a criação do prato");
     }
 
-    // Criação do prato
+    // Verificar se o ID do usuário é válido
+    const userExists = await knex("users").where("id", user_id).first();
 
+    if (!userExists) {
+      return response.status(400).json({ error: "ID de usuário inválido" });
+    }
+
+    // Criação do prato
     const [plate] = await knex("plates")
       .insert({
         title,

@@ -1,11 +1,12 @@
-exports.up = (knex) =>
-  knex.schema.createTable("favorite_plates", (table) => {
-    table.increments("id");
+exports.up = function (knex) {
+  return knex.schema.createTable("favorite_plates", function (table) {
+    table.increments("id").primary();
     table.integer("user_id").unsigned().notNullable();
-    table.foreign("user_id").references("users.id");
     table.integer("plate_id").unsigned().notNullable();
-    table.foreign("plate_id").references("plates.id");
-    table.timestamp("created_at").default(knex.fn.now());
+    table.timestamp("created_at").defaultTo(knex.fn.now());
   });
+};
 
-exports.down = (knex) => knex.schema.dropTable("favorite_plates");
+exports.down = function (knex) {
+  return knex.schema.dropTableIfExists("favorite_plates");
+};

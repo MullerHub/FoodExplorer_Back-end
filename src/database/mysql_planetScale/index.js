@@ -5,7 +5,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 async function mysqlConnection() {
-  const connection = await mysql.createConnection({
+  const database = await mysql.createConnection({
     host: process.env.HOSTNAME_DB,
     user: process.env.USERNAME_DB,
     password: process.env.PASSWORD_DB,
@@ -14,7 +14,7 @@ async function mysqlConnection() {
     },
   });
 
-  return connection;
+  return database;
 }
 
 module.exports = mysqlConnection;
