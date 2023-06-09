@@ -26,7 +26,6 @@ class PlatesController {
 
     // Busca de ingredientes estáticos já criados no back-end e retornado o id
     let ingredientIds = [];
-    console.log(ingredients);
     const ingredientSplit = ingredients.split(",");
 
     await Promise.all(
