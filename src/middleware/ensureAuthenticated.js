@@ -10,7 +10,6 @@ async function ensureAuthenticated(request, response, next) {
   }
 
   const [, token] = authHeader.split(" ");
-  console.log("TOKEN chegando no middleware => ", { token });
   try {
     const { sub: user_id, user } = verify(token, authConfig.jwt.secret);
 

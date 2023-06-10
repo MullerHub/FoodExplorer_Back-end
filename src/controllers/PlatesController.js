@@ -39,7 +39,6 @@ class PlatesController {
         }
       }),
     );
-    console.log("IngredientsIds => ", ingredientIds);
 
     // Verificar se pelo menos uma categoria foi fornecida
     if (!categories || categories.length === 0) {
