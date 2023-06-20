@@ -101,21 +101,19 @@ class PlatesController {
   }
 
   async show(request, response) {
-    const plates = await knex("plates").select("*");
+    const { id } = request.params;
 
-    return response.json(plates);
+    const plate = await knex("plates").where("id", id).first();
+
+    if (!plate) {
+      return response.status(404).json({ error: "Prato não encontrado" });
+    }
+
+    return response.json(plate);
   }
 
   async index(request, response) {
-    const { id } = request.params;
-
-    let plates;
-
-    if (id) {
-      plates = await knex("plates").where({ id });
-    } else {
-      plates = await knex("plates");
-    }
+    const plates = await knex("plates").select("*");
 
     return response.json(plates);
   }
@@ -197,6 +195,16 @@ class PlatesController {
       await knex("plates").where({ id }).update(updateData);
     }
     return response.json({ success: true });
+  }
+
+  async search(request, response) {
+    const { title } = request.query;
+
+    const plates = await knex("plates")
+      .where("title", "like", `%${title}%`)
+      .select("*");
+
+    return response.json(plates);
   }
 }
 
