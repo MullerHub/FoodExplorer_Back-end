@@ -206,6 +206,30 @@ class PlatesController {
 
     return response.json(plates);
   }
+
+  async delete(request, response) {
+    const { id } = request.params;
+    const user_id = request.user.id;
+
+    // Verifique se o prato existe antes de excluí-lo
+    const plate = await knex("plates").where({ id }).first();
+
+    if (!plate) {
+      return response.status(404).json({ error: "Prato não encontrado" });
+    }
+
+    // Verifique se o usuário tem permissão para excluir o prato
+    if (plate.user_id !== user_id) {
+      return response
+        .status(403)
+        .json({ error: "Acesso negado, você não é o dono deste prato" });
+    }
+
+    // Exclua o prato do banco de dados
+    await knex("plates").where({ id }).delete();
+
+    return response.json({ success: true });
+  }
 }
 
 module.exports = PlatesController;

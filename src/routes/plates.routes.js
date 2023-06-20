@@ -30,4 +30,6 @@ platesRoutes.put(
   platesController.update,
 );
 
+platesRoutes.delete("/:id", ensureAuthenticated, platesController.delete);
+
 module.exports = platesRoutes;
