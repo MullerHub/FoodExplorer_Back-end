@@ -4,9 +4,10 @@ exports.up = (knex) =>
     table.text("status");
     table.text("code").notNullable();
     table.text("details");
-    table.integer("orders_id").references("id").inTable("plates");
-    table.integer("users_id").references("id").inTable("users");
-    table.timestamp("created_at").default(knex.fn.now());
+    table.integer("plate_id").unsigned().references("id").inTable("plates");
+    table.integer("user_id").unsigned().references("id").inTable("users");
+    table.timestamp("created_at").defaultTo(knex.fn.now());
+    table.float("total_value").notNullable();
   });
 
 exports.down = (knex) => knex.schema.dropTable("orders");
