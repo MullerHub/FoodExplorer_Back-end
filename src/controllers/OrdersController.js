@@ -145,6 +145,27 @@ class OrdersController {
       return response.status(500).json({ error: "Erro ao atualizar o pedido" });
     }
   }
+
+  async delete(request, response) {
+    const { id } = request.params;
+
+    try {
+      // Verificar se o pedido existe
+      const existingOrder = await knex("orders").where("id", id).first();
+
+      if (!existingOrder) {
+        return response.status(404).json({ error: "Pedido não encontrado" });
+      }
+
+      // Excluir o pedido
+      await knex("orders").where("id", id).del();
+
+      return response.status(204).end();
+    } catch (error) {
+      console.error(error);
+      return response.status(500).json({ error: "Erro ao excluir o pedido" });
+    }
+  }
 }
 
 module.exports = OrdersController;

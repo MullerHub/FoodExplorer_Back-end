@@ -17,11 +17,7 @@ ordersRoutes.get("/:id", ensureAuthenticated, ordersController.show);
 // Rota para atualizar um pedido
 ordersRoutes.put("/:id", ensureAuthenticated, ordersController.update);
 
-/* Falta implementar as rotas abaixo
-
 // Rota para excluir um pedido
 ordersRoutes.delete("/:id", ensureAuthenticated, ordersController.delete);
-
- */
 
 module.exports = ordersRoutes;
