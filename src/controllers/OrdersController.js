@@ -115,6 +115,36 @@ class OrdersController {
         .json({ error: "Erro ao buscar os detalhes do pedido" });
     }
   }
+
+  async update(request, response) {
+    const { id } = request.params;
+    const { status, code, details, total_value } = request.body;
+
+    try {
+      // Verificar se o pedido existe
+      const existingOrder = await knex("orders").where("id", id).first();
+
+      if (!existingOrder) {
+        return response.status(404).json({ error: "Pedido não encontrado" });
+      }
+
+      // Atualizar os dados do pedido
+      await knex("orders").where("id", id).update({
+        status,
+        code,
+        details,
+        total_value,
+      });
+
+      // Buscar o pedido atualizado
+      const updatedOrder = await knex("orders").where("id", id).first();
+
+      return response.json(updatedOrder);
+    } catch (error) {
+      console.error(error);
+      return response.status(500).json({ error: "Erro ao atualizar o pedido" });
+    }
+  }
 }
 
 module.exports = OrdersController;
