@@ -66,6 +66,55 @@ class OrdersController {
       return response.status(500).json({ error: "Erro ao listar os pedidos" });
     }
   }
+
+  async show(request, response) {
+    const { id } = request.params;
+
+    try {
+      // Buscar o pedido no banco de dados pelo ID
+      const order = await knex("orders")
+        .select(
+          "orders.id",
+          "orders.code",
+          "orders.details",
+          "orders.total_value",
+          "order_statuses.status",
+        )
+        .leftJoin("order_statuses", "orders.status_id", "order_statuses.id")
+        .where("orders.id", id)
+        .first();
+
+      if (!order) {
+        return response.status(404).json({ error: "Pedido não encontrado" });
+      }
+
+      // Buscar os detalhes do prato associado ao pedido
+      const plate = await knex("plates")
+        .select(
+          "plates.id",
+          "plates.title",
+          "plates.description",
+          "plates.ingredients",
+          "plates.picture",
+          "plates.value",
+        )
+        .where("plates.id", order.plate_id)
+        .first();
+
+      if (!plate) {
+        return response.status(404).json({ error: "Prato não encontrado" });
+      }
+
+      order.plate = plate;
+
+      return response.json(order);
+    } catch (error) {
+      console.error(error);
+      return response
+        .status(500)
+        .json({ error: "Erro ao buscar os detalhes do pedido" });
+    }
+  }
 }
 
 module.exports = OrdersController;

@@ -11,13 +11,13 @@ ordersRoutes.post("/", ensureAuthenticated, ordersController.create);
 // Rota para listar todos os pedidos
 ordersRoutes.get("/", ensureAuthenticated, ordersController.index);
 
-/* Falta implementar as rotas abaixo
-
 // Rota para exibir detalhes de um pedido específico
 ordersRoutes.get("/:id", ensureAuthenticated, ordersController.show);
 
 // Rota para atualizar um pedido
 ordersRoutes.put("/:id", ensureAuthenticated, ordersController.update);
+
+/* Falta implementar as rotas abaixo
 
 // Rota para excluir um pedido
 ordersRoutes.delete("/:id", ensureAuthenticated, ordersController.delete);
