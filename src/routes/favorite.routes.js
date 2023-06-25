@@ -14,9 +14,15 @@ favoriteRoutes.post(
 );
 
 favoriteRoutes.get(
-  "/favorite_plates",
+  "/favorite_plates/:plate_id",
   ensureAuthenticated,
   favoritesController.show,
+);
+
+favoriteRoutes.get(
+  "/favorite_plates",
+  ensureAuthenticated,
+  favoritesController.index,
 );
 
 favoriteRoutes.delete(
