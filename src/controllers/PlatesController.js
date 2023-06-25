@@ -3,15 +3,15 @@ const AppError = require("../utils/AppError");
 const knex = require("../database/knex");
 
 class PlatesController {
-  async create(request, response) {
-    const { title, description, value, ingredients, categories } = request.body;
-    const user_id = request.user.id;
-    const picture = request.file.filename;
+  async create(req, res) {
+    const { title, description, value, ingredients, categories } = req.body;
+    const user_id = req.user.id;
+    const picture = req.file.filename;
 
-    if (!request.user.isAdmin) {
-      console.log("Valor de request.user.isAdmin:", request.user);
+    if (!req.user.isAdmin) {
+      console.log("Valor de req.user.isAdmin:", req.user);
       console.log("Requisição de usuário não é admin. Acesso negado.");
-      return response
+      return res
         .status(403)
         .json({ error: "Acesso negado, você não é o admin." });
     }
@@ -20,7 +20,7 @@ class PlatesController {
 
     const filePlate = await diskStorage.saveFile(picture);
 
-    if (!request.file) {
+    if (!req.file) {
       throw new AppError("Faltou adicionar uma imagem pelo menos!!");
     }
 
@@ -42,16 +42,14 @@ class PlatesController {
 
     // Verificar se pelo menos uma categoria foi fornecida
     if (!categories || categories.length === 0) {
-      return response
+      return res
         .status(400)
         .json({ error: "Não foi passado nenhuma categoria" });
     }
 
     // Verificar se categories é uma string
     if (typeof categories !== "string") {
-      return response
-        .status(400)
-        .json({ error: "Categories não é uma string" });
+      return res.status(400).json({ error: "Categories não é uma string" });
     }
 
     // Obter o ID da categoria com base no nome fornecido
@@ -60,14 +58,14 @@ class PlatesController {
       .pluck("id");
 
     if (!category) {
-      return response
+      return res
         .status(400)
         .json({ error: "Não foi passado nenhuma categoria" });
     }
 
     // Verificar se pelo menos uma categoria válida foi encontrada
     if (category.length === 0) {
-      return response
+      return res
         .status(400)
         .json({ error: "Nenhuma categoria válida foi passada" });
     }
@@ -92,53 +90,53 @@ class PlatesController {
       .returning("id");
 
     if (!ingredientIds || ingredientIds.length === 0) {
-      return response
+      return res
         .status(400)
         .json({ error: "Não foi passado nenhum ingrediente válido" });
     }
 
-    return response.json({ plate_id: plate });
+    return res.json({ plate_id: plate });
   }
 
-  async show(request, response) {
-    const { id } = request.params;
+  async show(req, res) {
+    const { id } = req.params;
 
     const plate = await knex("plates").where("id", id).first();
 
     if (!plate) {
-      return response.status(404).json({ error: "Prato não encontrado" });
+      return res.status(404).json({ error: "Prato não encontrado" });
     }
 
-    return response.json(plate);
+    return res.json(plate);
   }
 
-  async index(request, response) {
+  async index(req, res) {
     const plates = await knex("plates").select("*");
 
-    return response.json(plates);
+    return res.json(plates);
   }
 
-  async update(request, response) {
-    const { id } = request.params;
-    const { title, description, value, ingredients, categories } = request.body;
-    const user_id = request.user.id;
+  async update(req, res) {
+    const { id } = req.params;
+    const { title, description, value, ingredients, categories } = req.body;
+    const user_id = req.user.id;
 
     const plate = await knex("plates").where({ id }).first();
 
     if (!plate) {
-      return response.status(404).json({ error: "Prato não encontrado" });
+      return res.status(404).json({ error: "Prato não encontrado" });
     }
 
     if (plate.user_id !== user_id) {
-      return response
+      return res
         .status(403)
         .json({ error: "Acesso negado, você não é o dono deste prato" });
     }
 
     const diskStorage = new DiskStorage();
 
-    if (request.file) {
-      const picture = request.file.filename;
+    if (req.file) {
+      const picture = req.file.filename;
       const filePlate = await diskStorage.saveFile(picture);
       await knex("plates").where({ id }).update({ picture: filePlate });
     }
@@ -184,7 +182,7 @@ class PlatesController {
           .pluck("id");
 
         if (!category) {
-          return response
+          return res
             .status(400)
             .json({ error: "Não foi passada nenhuma categoria" });
         }
@@ -194,33 +192,33 @@ class PlatesController {
 
       await knex("plates").where({ id }).update(updateData);
     }
-    return response.json({ success: true });
+    return res.json({ success: true });
   }
 
-  async search(request, response) {
-    const { title } = request.query;
+  async search(req, res) {
+    const { title } = req.query;
 
     const plates = await knex("plates")
       .where("title", "like", `%${title}%`)
       .select("*");
 
-    return response.json(plates);
+    return res.json(plates);
   }
 
-  async delete(request, response) {
-    const { id } = request.params;
-    const user_id = request.user.id;
+  async delete(req, res) {
+    const { id } = req.params;
+    const user_id = req.user.id;
 
     // Verifique se o prato existe antes de excluí-lo
     const plate = await knex("plates").where({ id }).first();
 
     if (!plate) {
-      return response.status(404).json({ error: "Prato não encontrado" });
+      return res.status(404).json({ error: "Prato não encontrado" });
     }
 
     // Verifique se o usuário tem permissão para excluir o prato
     if (plate.user_id !== user_id) {
-      return response
+      return res
         .status(403)
         .json({ error: "Acesso negado, você não é o dono deste prato" });
     }
@@ -228,7 +226,7 @@ class PlatesController {
     // Exclua o prato do banco de dados
     await knex("plates").where({ id }).delete();
 
-    return response.json({ success: true });
+    return res.json({ success: true });
   }
 }
 

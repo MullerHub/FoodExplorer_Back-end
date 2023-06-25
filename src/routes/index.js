@@ -5,7 +5,8 @@ const platesRoutes = require("./plates.routes");
 const favoriteRoutes = require("./favorite.routes");
 const sessionsRoutes = require("./sessions.routes");
 const ingredientsRoutes = require("./ingredients.routes");
-const ordersRoutes = require("./orders.routes"); // Importe as rotas de pedidos
+const ordersRoutes = require("./orders.routes");
+const cashRoutes = require("./cash.routes");
 
 const routes = Router();
 
@@ -14,6 +15,7 @@ routes.use("/sessions", sessionsRoutes);
 routes.use("/plates", platesRoutes);
 routes.use("/favorites", favoriteRoutes);
 routes.use("/ingredients", ingredientsRoutes);
-routes.use("/orders", ordersRoutes); // Adicione as rotas de pedidos
+routes.use("/orders", ordersRoutes);
+routes.use("/payments", cashRoutes);
 
 module.exports = routes;

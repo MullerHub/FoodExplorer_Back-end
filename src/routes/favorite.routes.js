@@ -13,7 +13,11 @@ favoriteRoutes.post(
   favoritesController.create,
 );
 
-favoriteRoutes.get("/favorite_plates", favoritesController.show);
+favoriteRoutes.get(
+  "/favorite_plates",
+  ensureAuthenticated,
+  favoritesController.show,
+);
 
 favoriteRoutes.delete(
   "/favorite_plates",

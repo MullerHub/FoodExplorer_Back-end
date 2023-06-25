@@ -11,11 +11,25 @@ class OrdersController {
       }
 
       // Extrair os dados da requisição
-      const { status, code, details, plateId, userId, totalValue } = req.body;
+      const { status, status_id, code, details, plateId, userId, totalValue } =
+        req.body;
+
+      /*   // Verificar se todos os campos necessários foram fornecidos
+      if (
+        !status ||
+        !status_id ||
+        !code ||
+        !plateId ||
+        !userId ||
+        !totalValue
+      ) {
+        return res.status(400).json({ error: "Dados incompletos" });
+      } */
 
       // Criar o novo pedido no banco de dados
       const [orderId] = await knex("orders").insert({
         status,
+        status_id,
         code,
         details,
         plate_id: plateId,
@@ -40,6 +54,7 @@ class OrdersController {
           "orders.code",
           "orders.details",
           "orders.total_value",
+          "orders.plate_id",
           "order_statuses.status",
         )
         .leftJoin("order_statuses", "orders.status_id", "order_statuses.id");
@@ -78,6 +93,7 @@ class OrdersController {
           "orders.code",
           "orders.details",
           "orders.total_value",
+          "orders.plate_id",
           "order_statuses.status",
         )
         .leftJoin("order_statuses", "orders.status_id", "order_statuses.id")
@@ -96,6 +112,7 @@ class OrdersController {
           "plates.description",
           "plates.ingredients",
           "plates.picture",
+
           "plates.value",
         )
         .where("plates.id", order.plate_id)
@@ -118,7 +135,7 @@ class OrdersController {
 
   async update(request, response) {
     const { id } = request.params;
-    const { status, code, details, total_value } = request.body;
+    const { status, status_id, code, details, total_value } = request.body;
 
     try {
       // Verificar se o pedido existe
@@ -131,6 +148,7 @@ class OrdersController {
       // Atualizar os dados do pedido
       await knex("orders").where("id", id).update({
         status,
+        status_id,
         code,
         details,
         total_value,

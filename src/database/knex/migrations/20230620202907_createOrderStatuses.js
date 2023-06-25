@@ -9,6 +9,7 @@ exports.up = async (knex) => {
     { status: "Pagamento aprovado!" },
     { status: "Pedido entregue!" },
   ]);
+  console.log("Criado ordens de status");
 };
 
 exports.down = (knex) => knex.schema.dropTable("order_statuses");
