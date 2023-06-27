@@ -14,7 +14,7 @@ class OrdersController {
       const { status, status_id, code, details, plateId, userId, totalValue } =
         req.body;
 
-      /*   // Verificar se todos os campos necessários foram fornecidos
+      // Verificar se todos os campos necessários foram fornecidos
       if (
         !status ||
         !status_id ||
@@ -24,7 +24,7 @@ class OrdersController {
         !totalValue
       ) {
         return res.status(400).json({ error: "Dados incompletos" });
-      } */
+      }
 
       // Criar o novo pedido no banco de dados
       const [orderId] = await knex("orders").insert({
