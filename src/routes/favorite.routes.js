@@ -8,7 +8,7 @@ const favoriteRoutes = Router();
 const favoritesController = new FavoritesController();
 
 favoriteRoutes.post(
-  "/favorite_plates",
+  "/favorite_plates/:plate_id",
   ensureAuthenticated,
   favoritesController.create,
 );
@@ -26,7 +26,7 @@ favoriteRoutes.get(
 );
 
 favoriteRoutes.delete(
-  "/favorite_plates",
+  "/favorite_plates/:plate_id",
   ensureAuthenticated,
   favoritesController.delete,
 );
