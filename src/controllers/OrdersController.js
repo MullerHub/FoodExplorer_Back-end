@@ -11,31 +11,36 @@ class OrdersController {
       }
 
       // Extrair os dados da requisição
-      const { status, status_id, code, details, plateId, userId, totalValue } =
+      const { status_id, code, details, plateId, userId, totalValue } =
         req.body;
 
+      console.log("req.body ==>>", { status_id }, { plateId }, { totalValue });
+
       // Verificar se todos os campos necessários foram fornecidos
-      if (
-        !status ||
-        !status_id ||
-        !code ||
-        !plateId ||
-        !userId ||
-        !totalValue
-      ) {
+      if (!status_id || !code || !plateId || !userId || !totalValue) {
         return res.status(400).json({ error: "Dados incompletos" });
       }
 
+      // Verificar se o plateId é um array
+      const plateIds = Array.isArray(plateId) ? plateId : [plateId];
+
       // Criar o novo pedido no banco de dados
-      const [orderId] = await knex("orders").insert({
-        status,
+      const order = {
         status_id,
         code,
         details,
         plate_id: plateId,
         user_id: userId,
         total_value: totalValue,
-      });
+      };
+
+      const [orderId] = await knex("orders").insert(order);
+
+      // Inserir os pratos no pedido
+      const orderPlates = plateIds.map((plateId) => ({
+        order_id: orderId,
+        plate_id: plateId,
+      }));
 
       // Retornar a resposta com o ID do pedido criado
       return res.status(201).json({ id: orderId });

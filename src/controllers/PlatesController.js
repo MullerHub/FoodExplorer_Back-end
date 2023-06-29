@@ -4,9 +4,12 @@ const knex = require("../database/knex");
 
 class PlatesController {
   async create(req, res) {
-    const { title, description, value, ingredients, categories } = req.body;
+    const { title, description, value, amount, ingredients, categories } =
+      req.body;
     const user_id = req.user.id;
     const picture = req.file.filename;
+
+    console.log("req.body ==>>", { title }, { description }, { ingredients });
 
     if (!req.user.isAdmin) {
       console.log("Valor de req.user.isAdmin:", req.user);
@@ -23,6 +26,15 @@ class PlatesController {
     if (!req.file) {
       throw new AppError("Faltou adicionar uma imagem pelo menos!!");
     }
+
+    // Verificar se o valor de "amount" foi fornecido no front-end
+    const amountValue = amount !== undefined ? amount : 0;
+
+    // Formatar o valor com vírgula em valores decimais
+    const formattedValue = parseFloat(value).toLocaleString("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
 
     // Busca de ingredientes estáticos já criados no back-end e retornado o id
     let ingredientIds = [];
@@ -82,7 +94,8 @@ class PlatesController {
         title,
         description,
         ingredients: JSON.stringify(ingredientIds),
-        value,
+        value: formattedValue,
+        amount: amountValue,
         picture: filePlate,
         user_id,
         category_id: category,

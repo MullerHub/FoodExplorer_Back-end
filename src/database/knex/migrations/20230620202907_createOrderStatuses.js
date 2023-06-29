@@ -5,9 +5,9 @@ exports.up = async (knex) => {
   });
 
   await knex("order_statuses").insert([
-    { status: "Aguardando pagamento no caixa" },
-    { status: "Pagamento aprovado!" },
-    { status: "Pedido entregue!" },
+    { status: "Pendente" },
+    { status: "Preparando" },
+    { status: "Entregue" },
   ]);
   console.log("Criado ordens de status");
 };

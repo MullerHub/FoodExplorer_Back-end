@@ -6,7 +6,6 @@ exports.up = (knex) =>
       .unsigned()
       .references("id")
       .inTable("order_statuses");
-    table.string("status").notNullable();
     table.text("code").notNullable();
     table.text("details");
     table.integer("plate_id").unsigned().references("id").inTable("plates");

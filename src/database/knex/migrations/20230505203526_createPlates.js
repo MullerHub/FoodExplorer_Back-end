@@ -6,6 +6,7 @@ exports.up = (knex) =>
     table.text("ingredients");
     table.varchar("picture").default(null);
     table.float("value");
+    table.float("amount").notNullable().defaultTo(0);
     table.integer("user_id").unsigned().notNullable();
     table.integer("category_id").unsigned();
     table.foreign("user_id").references("users.id");
