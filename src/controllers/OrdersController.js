@@ -1,5 +1,29 @@
 const { validationResult } = require("express-validator");
 const knex = require("../database/knex");
+const crypto = require("crypto");
+
+function generateUniqueCodeHex() {
+  // Gera um número aleatório de 6 dígitos
+  const randomNumber = Math.floor(100000 + Math.random() * 900000);
+
+  // Calcula um hash MD5 do número aleatório
+  const hash = crypto
+    .createHash("md5")
+    .update(randomNumber.toString())
+    .digest("hex");
+
+  // Obtém os primeiros 6 dígitos do hash
+  const code = hash.substr(0, 6);
+
+  return code;
+}
+
+function generateUniqueCodeNumber() {
+  // Gera um número aleatório de 6 dígitos
+  const randomNumber = Math.floor(100000 + Math.random() * 900000);
+
+  return randomNumber.toString();
+}
 
 class OrdersController {
   async create(req, res) {
@@ -11,18 +35,32 @@ class OrdersController {
       }
 
       // Extrair os dados da requisição
-      const { status_id, code, details, plateId, userId, totalValue } =
-        req.body;
+      const { status_id, details, plateId, userId, totalValue } = req.body;
 
       console.log("req.body ==>>", { status_id }, { plateId }, { totalValue });
 
       // Verificar se todos os campos necessários foram fornecidos
-      if (!status_id || !code || !plateId || !userId || !totalValue) {
+      if (!status_id || !plateId || !userId || !totalValue) {
         return res.status(400).json({ error: "Dados incompletos" });
       }
 
       // Verificar se o plateId é um array
       const plateIds = Array.isArray(plateId) ? plateId : [plateId];
+
+      console.log("plateeee", plateIds);
+
+      const [existingPlate] = await knex("plates")
+        .where("id", plateId)
+        .count("* as count");
+
+      if (existingPlate.count === 0) {
+        return res
+          .status(404)
+          .json({ error: "Prato não encontrado e/ou não existe!" });
+      }
+
+      // Gerar o código único
+      const code = generateUniqueCodeNumber();
 
       // Criar o novo pedido no banco de dados
       const order = {
