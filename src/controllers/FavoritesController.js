@@ -5,6 +5,14 @@ class FavoritesController {
     const user_id = request.user.id;
     const { plate_id } = request.params;
 
+    // Verificar se o prato existe
+    const plate = await knex("plates").where({ id: plate_id }).first();
+    if (!plate) {
+      return response
+        .status(404)
+        .json({ error: "Prato não encontrado / Não existe" });
+    }
+
     // Verificar se o prato já foi marcado como favorito pelo usuário
     const [existingFavorite] = await knex("favorite_plates")
       .where({ user_id, plate_id })
