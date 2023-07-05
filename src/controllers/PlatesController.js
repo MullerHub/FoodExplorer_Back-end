@@ -166,7 +166,9 @@ class PlatesController {
       }
 
       if (value) {
-        updateData.value = value;
+        // Formatar o valor com ponto para virgula (de 20.50 para 20,50)
+        const formattedValue = value.replace(".", ",");
+        updateData.value = formattedValue;
       }
 
       if (ingredients) {
