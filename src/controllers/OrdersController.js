@@ -35,29 +35,15 @@ class OrdersController {
       }
 
       // Extrair os dados da requisição
-      const { status_id, details, plateId, userId, totalValue } = req.body;
-
-      console.log("req.body ==>>", { status_id }, { plateId }, { totalValue });
+      const { status_id, details, plates, userId, totalValue } = req.body;
 
       // Verificar se todos os campos necessários foram fornecidos
-      if (!status_id || !plateId || !userId || !totalValue) {
+      if (!status_id || !plates || !userId || !totalValue) {
         return res.status(400).json({ error: "Dados incompletos" });
       }
 
-      // Verificar se o plateId é um array
-      const plateIds = Array.isArray(plateId) ? plateId : [plateId];
-
-      console.log("plateeee", plateIds);
-
-      const [existingPlate] = await knex("plates")
-        .where("id", plateId)
-        .count("* as count");
-
-      if (existingPlate.count === 0) {
-        return res
-          .status(404)
-          .json({ error: "Prato não encontrado e/ou não existe!" });
-      }
+      // Verificar se o plates é um array
+      const plateIds = Array.isArray(plates) ? plates : [plates];
 
       // Gerar o código único
       const code = generateUniqueCodeNumber();
@@ -67,7 +53,6 @@ class OrdersController {
         status_id,
         code,
         details,
-        plate_id: plateId,
         user_id: userId,
         total_value: totalValue,
       };
@@ -75,10 +60,12 @@ class OrdersController {
       const [orderId] = await knex("orders").insert(order);
 
       // Inserir os pratos no pedido
-      const orderPlates = plateIds.map((plateId) => ({
+      const orderItems = plateIds.map((plateId) => ({
         order_id: orderId,
-        plate_id: plateId,
+        shopping_cart_id: plateId,
       }));
+
+      await knex("order_items").insert(orderItems);
 
       // Retornar a resposta com o ID do pedido criado
       return res.status(201).json({ id: orderId });
