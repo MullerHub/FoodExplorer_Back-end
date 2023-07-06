@@ -25,6 +25,21 @@ function generateUniqueCodeNumber() {
   return randomNumber.toString();
 }
 
+async function updateStatusAutomatically() {
+  const statusIds = [1, 2, 3]; // IDs dos status na ordem desejada
+  let currentIndex = 0;
+
+  setInterval(() => {
+    currentIndex = (currentIndex + 1) % statusIds.length;
+    const newStatusId = statusIds[currentIndex];
+
+    // Atualize o status dos pedidos no banco de dados conforme necessário
+    // Aqui você pode usar seu código para atualizar o status_id nos pedidos
+
+    console.log(`Status atualizado para ${newStatusId}`);
+  }, 5 * 60 * 100); // 5 minutos em milissegundos, falta o zero no cem
+}
+
 class OrdersController {
   async create(req, res) {
     try {
@@ -34,16 +49,19 @@ class OrdersController {
         return res.status(400).json({ errors: errors.array() });
       }
 
+      let status_id = "1";
+      let total_value = "17.90";
+
       // Extrair os dados da requisição
-      const { status_id, details, plates, userId, totalValue } = req.body;
+      const { details, plates, userId } = req.body;
 
       // Verificar se todos os campos necessários foram fornecidos
-      if (!status_id || !plates || !userId || !totalValue) {
+      if (!status_id || !plates || !userId) {
         return res.status(400).json({ error: "Dados incompletos" });
       }
 
       // Verificar se o plates é um array
-      const plateIds = Array.isArray(plates) ? plates : [plates];
+      const plateIds = Object.keys(plates);
 
       // Gerar o código único
       const code = generateUniqueCodeNumber();
@@ -53,16 +71,16 @@ class OrdersController {
         status_id,
         code,
         details,
+        total_value,
         user_id: userId,
-        total_value: totalValue,
       };
 
       const [orderId] = await knex("orders").insert(order);
 
       // Inserir os pratos no pedido
-      const orderItems = plateIds.map((plateId) => ({
+      const orderItems = plateIds.map((plates) => ({
         order_id: orderId,
-        shopping_cart_id: plateId,
+        plates_id: plates,
       }));
 
       await knex("order_items").insert(orderItems);

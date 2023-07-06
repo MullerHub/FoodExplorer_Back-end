@@ -16,6 +16,6 @@ routes.use("/plates", platesRoutes);
 routes.use("/favorites", favoriteRoutes);
 routes.use("/ingredients", ingredientsRoutes);
 routes.use("/orders", ordersRoutes);
-// routes.use("/payments", cashRoutes);
+routes.use("/payments", cashRoutes);
 
 module.exports = routes;
