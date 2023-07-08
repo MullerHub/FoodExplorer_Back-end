@@ -3,7 +3,7 @@ const request = require("request");
 
 dotenv.config();
 const ACESS_TOKEN = process.env.SUA_CHAVE_API;
-const URL_BASE = (process.env.URL_SANDBOX += "/api/v3/customers");
+const URL_BASE = (process.env.URL_SANDBOX += "api/v3/customers");
 const CONTENT_TYPE_DO_HEADER = `Content-Type": "application/json`;
 
 class PaymentsController {
@@ -91,24 +91,48 @@ class PaymentsController {
   }
 
   async update(req, res) {
-    var request = require("request");
-
+    const { id } = req.params;
+    const {
+      email,
+      name,
+      phone,
+      mobilePhone,
+      cpfCnpj,
+      postalCode,
+      address,
+      addressNumber,
+      complement,
+      province,
+      externalReference,
+      notificationDisabled,
+      additionalEmails,
+      municipalInscription,
+      stateInscription,
+      observations,
+    } = req.body;
+    console.log("Updatedasdas:", req.body);
+    console.log("Updatedasdas:", req.params);
+    console.log("URL", URL_BASE + "/" + id);
     request(
       {
         method: "POST",
-        url: URL_BASE,
+        followOriginalHttpMethod: true,
+        followRedirect: true,
+        followAllRedirects: true,
+        url: `${URL_BASE}/${id}`,
         headers: {
-          "Content-Type": "application/json",
+          CONTENT_TYPE_DO_HEADER,
           access_token: ACESS_TOKEN,
         },
-        body: '{  "name": "Marcelo Almeida",  "email": "marcelo.almeida@gmail.com",  "phone": "4738010919",  "mobilePhone": "4799376637",  "cpfCnpj": "24971563792",  "postalCode": "01310-000",  "address": "Av. Paulista",  "addressNumber": "150",  "complement": "Sala 201",  "province": "Centro",  "externalReference": "12987382",  "notificationDisabled": false,  "additionalEmails": "marcelo.almeida2@gmail.com,marcelo.almeida3@gmail.com",  "municipalInscription": "46683695908",  "stateInscription": "646681195275"}',
+        body: JSON.stringify(req.body),
       },
-      function (error, response, body) {
-        console.log("Status:", response.statusCode);
-        console.log("Headers:", JSON.stringify(response.headers));
+      function (error, res, body) {
+        console.log("Status:", res.statusCode);
+        console.log("Headers:", JSON.stringify(res.headers));
         console.log("Response:", body);
       },
     );
+    return res.json(req.body);
   }
 }
 module.exports = PaymentsController;
