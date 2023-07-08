@@ -6,7 +6,7 @@ const ACESS_TOKEN = process.env.SUA_CHAVE_API;
 const URL_BASE = (process.env.URL_SANDBOX += "api/v3/customers");
 const CONTENT_TYPE_DO_HEADER = `Content-Type": "application/json`;
 
-class PaymentsController {
+class A_ClientesController {
   async create(req, res) {
     try {
       const {
@@ -135,4 +135,4 @@ class PaymentsController {
     return res.json(req.body);
   }
 }
-module.exports = PaymentsController;
+module.exports = A_ClientesController;
