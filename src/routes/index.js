@@ -7,6 +7,7 @@ const sessionsRoutes = require("./sessions.routes");
 const ingredientsRoutes = require("./ingredients.routes");
 const ordersRoutes = require("./orders.routes");
 const a_clientesRoutes = require("./asaas.routes/a_clientes.routes");
+const a_invoicesRoutes = require("./asaas.routes/a_invoices.routes");
 
 const routes = Router();
 
@@ -17,5 +18,6 @@ routes.use("/favorites", favoriteRoutes);
 routes.use("/ingredients", ingredientsRoutes);
 routes.use("/orders", ordersRoutes);
 routes.use("/a_clientes", a_clientesRoutes);
+routes.use("/a_invoices", a_invoicesRoutes);
 
 module.exports = routes;

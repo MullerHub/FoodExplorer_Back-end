@@ -3,7 +3,7 @@ const request = require("request");
 
 dotenv.config();
 const ACESS_TOKEN = process.env.SUA_CHAVE_API;
-const URL_BASE = (process.env.URL_SANDBOX += "api/v3/customers");
+// const URL_BASE = (process.env.URL_SANDBOX += "api/v3/customers");
 const CONTENT_TYPE_DO_HEADER = `Content-Type": "application/json`;
 
 class A_ClientesController {
@@ -28,31 +28,34 @@ class A_ClientesController {
         observations,
       } = req.body;
 
-      const responseAsaas = await fetch(URL_BASE, {
-        method: "POST",
-        headers: {
-          CONTENT_TYPE_DO_HEADER,
-          access_token: ACESS_TOKEN,
+      const responseAsaas = await fetch(
+        (process.env.URL_SANDBOX += "api/v3/customers"),
+        {
+          method: "POST",
+          headers: {
+            CONTENT_TYPE_DO_HEADER,
+            access_token: ACESS_TOKEN,
+          },
+          body: JSON.stringify({
+            email,
+            name,
+            phone,
+            mobilePhone,
+            cpfCnpj,
+            postalCode,
+            address,
+            addressNumber,
+            complement,
+            province,
+            externalReference,
+            notificationDisabled,
+            additionalEmails,
+            municipalInscription,
+            stateInscription,
+            observations,
+          }),
         },
-        body: JSON.stringify({
-          email,
-          name,
-          phone,
-          mobilePhone,
-          cpfCnpj,
-          postalCode,
-          address,
-          addressNumber,
-          complement,
-          province,
-          externalReference,
-          notificationDisabled,
-          additionalEmails,
-          municipalInscription,
-          stateInscription,
-          observations,
-        }),
-      });
+      );
 
       console.log("ASAS RETORNO =>>", responseAsaas);
 
@@ -110,9 +113,6 @@ class A_ClientesController {
       stateInscription,
       observations,
     } = req.body;
-    console.log("Updatedasdas:", req.body);
-    console.log("Updatedasdas:", req.params);
-    console.log("URL", URL_BASE + "/" + id);
     request(
       {
         method: "POST",
