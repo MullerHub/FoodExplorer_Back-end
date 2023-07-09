@@ -6,6 +6,11 @@ const a_invoicesRoutes = Router();
 const a_InvoicesController = new A_InvoicesController();
 
 a_invoicesRoutes.post("/", ensureAuthenticated, a_InvoicesController.create);
+a_invoicesRoutes.post(
+  "/",
+  ensureAuthenticated,
+  a_InvoicesController.createCreditCard,
+);
 a_invoicesRoutes.get("/", ensureAuthenticated, a_InvoicesController.show);
 a_invoicesRoutes.post("/:id", ensureAuthenticated, a_InvoicesController.update);
 

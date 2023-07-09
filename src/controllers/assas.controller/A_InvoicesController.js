@@ -24,10 +24,10 @@ class A_InvoicesController {
         postalService,
       } = req.body;
 
-      request(
+      const responseAsaasInvoices = await fetch(
+        (process.env.URL_SANDBOX += "/api/v3/payments"),
         {
           method: "POST",
-          url: (process.env.URL_SANDBOX += "/api/v3/payments"),
           followOriginalHttpMethod: true,
           followRedirect: true,
           followAllRedirects: true,
@@ -48,12 +48,87 @@ class A_InvoicesController {
             postalService,
           }),
         },
-        function (error, res, body) {
-          console.log("Status:", res.statusCode);
-          console.log("Headers:", JSON.stringify(res.headers));
-          console.log("Response:", body);
+      );
+
+      console.log("ASAS RETORNO =>>", responseAsaasInvoices);
+
+      if (!responseAsaasInvoices.ok) {
+        throw new Error(
+          `Erro na requisição Asaas: ${responseAsaasInvoices.status}`,
+        );
+      }
+
+      const responseDataInvoice = await responseAsaasInvoices.text();
+      const data = responseDataInvoice ? JSON.parse(responseDataInvoice) : null;
+
+      return res.json(data);
+    } catch (error) {
+      console.error("Erro na requisição Asaas:", error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
+  async createCreditCard(req, res) {
+    try {
+      const {
+        customer,
+        billingType,
+        dueDate,
+        value,
+        description,
+        externalReference,
+        creditCard,
+        creditCardHolderInfo,
+        creditCardToken,
+        remoteIp,
+      } = req.body;
+
+      const requestBody = {
+        customer,
+        billingType,
+        dueDate,
+        value,
+        description,
+        externalReference,
+        creditCard: {
+          holderName: creditCard.holderName,
+          number: creditCard.number,
+          expiryMonth: creditCard.expiryMonth,
+          expiryYear: creditCard.expiryYear,
+          ccv: creditCard.ccv,
+        },
+        creditCardHolderInfo,
+        creditCardToken,
+        remoteIp,
+      };
+
+      const responseAsaasInvoices = await fetch(
+        (process.env.URL_SANDBOX += "/api/v3/payments"),
+        {
+          method: "POST",
+          followOriginalHttpMethod: true,
+          followRedirect: true,
+          followAllRedirects: true,
+          headers: {
+            CONTENT_TYPE_DO_HEADER,
+            access_token: ACESS_TOKEN,
+          },
+          body: JSON.stringify(requestBody),
         },
       );
+
+      console.log("ASAS RETORNO =>>", responseAsaasInvoices);
+
+      if (!responseAsaasInvoices.ok) {
+        throw new Error(
+          `Erro na requisição Asaas: ${responseAsaasInvoices.status}`,
+        );
+      }
+
+      const responseDataInvoice = await responseAsaasInvoices.text();
+      const data = responseDataInvoice ? JSON.parse(responseDataInvoice) : null;
+
+      return res.json(data);
     } catch (error) {
       console.error("Erro na requisição Asaas:", error);
       return res.status(500).json({ error: "Internal server error" });
