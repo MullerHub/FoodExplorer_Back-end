@@ -53,10 +53,10 @@ class OrdersController {
       let total_value = "17.90";
 
       // Extrair os dados da requisição
-      const { details, plates, userId } = req.body;
+      const { details, plates } = req.body;
 
       // Verificar se todos os campos necessários foram fornecidos
-      if (!status_id || !plates || !userId) {
+      if (!status_id || !plates) {
         return res.status(400).json({ error: "Dados incompletos" });
       }
 
@@ -72,7 +72,7 @@ class OrdersController {
         code,
         details,
         total_value,
-        user_id: userId,
+        user_id: req.user.id,
       };
 
       const [orderId] = await knex("orders").insert(order);
@@ -95,35 +95,33 @@ class OrdersController {
 
   async index(request, response) {
     try {
-      // Buscar todos os pedidos no banco de dados
       const orders = await knex("orders")
         .select(
           "orders.id",
           "orders.code",
           "orders.details",
           "orders.total_value",
-          "orders.plate_id",
+          "orders.user_id",
           "order_statuses.status",
         )
-        .leftJoin("order_statuses", "orders.status_id", "order_statuses.id");
+        .leftJoin("order_statuses", "orders.status_id", "order_statuses.id")
+        .where("orders.user_id", request.user.id);
 
-      // Buscar os detalhes dos pratos associados a cada pedido
-      for (const order of orders) {
-        const plates = await knex("plates")
-          .select(
-            "plates.id",
-            "plates.title",
-            "plates.description",
-            "plates.ingredients",
-            "plates.picture",
-            "plates.value",
-          )
-          .where("plates.id", order.plate_id);
+      const orderIds = orders.map((order) => order.id);
 
-        order.plates = plates;
-      }
+      const plates = await knex("order_items")
+        .select("order_items.order_id", "plates.*")
+        .whereIn("order_items.order_id", orderIds)
+        .leftJoin("plates", "order_items.plates_id", "plates.id");
 
-      return response.json(orders);
+      const ordersWithPlates = orders.map((order) => {
+        const orderPlates = plates.filter(
+          (plate) => plate.order_id === order.id,
+        );
+        return { ...order, plates: orderPlates };
+      });
+
+      return response.json(ordersWithPlates);
     } catch (error) {
       console.error(error);
       return response.status(500).json({ error: "Erro ao listar os pedidos" });
@@ -141,7 +139,7 @@ class OrdersController {
           "orders.code",
           "orders.details",
           "orders.total_value",
-          "orders.plate_id",
+          "orders.user_id",
           "order_statuses.status",
         )
         .leftJoin("order_statuses", "orders.status_id", "order_statuses.id")
@@ -153,17 +151,10 @@ class OrdersController {
       }
 
       // Buscar os detalhes do prato associado ao pedido
-      const plate = await knex("plates")
-        .select(
-          "plates.id",
-          "plates.title",
-          "plates.description",
-          "plates.ingredients",
-          "plates.picture",
-
-          "plates.value",
-        )
-        .where("plates.id", order.plate_id)
+      const plate = await knex("order_items")
+        .select("order_items.order_id", "plates.*")
+        .where("order_items.order_id", order.id)
+        .leftJoin("plates", "order_items.plates_id", "plates.id")
         .first();
 
       if (!plate) {
