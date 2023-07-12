@@ -4,8 +4,7 @@ const knex = require("../database/knex");
 
 class PlatesController {
   async create(req, res) {
-    const { title, description, value, amount, ingredients, categories } =
-      req.body;
+    const { title, description, value, ingredients, categories } = req.body;
     const user_id = req.user.id;
     const picture = req.file.filename;
 
@@ -26,9 +25,6 @@ class PlatesController {
     if (!req.file) {
       throw new AppError("Faltou adicionar uma imagem pelo menos!!");
     }
-
-    // Verificar se o valor de "amount" foi fornecido no front-end
-    const amountValue = amount !== undefined ? amount : 0;
 
     // Formatar o valor com vírgula em valores decimais
     const formattedValue = parseFloat(value).toLocaleString("pt-BR", {
@@ -95,7 +91,6 @@ class PlatesController {
         description,
         ingredients: JSON.stringify(ingredientIds),
         value: formattedValue,
-        amount: amountValue,
         picture: filePlate,
         user_id,
         category_id: category,
@@ -113,6 +108,8 @@ class PlatesController {
 
   async show(req, res) {
     const { id } = req.params;
+
+    console.log("chegou no show de platesS");
 
     const plate = await knex("plates").where("id", id).first();
 
