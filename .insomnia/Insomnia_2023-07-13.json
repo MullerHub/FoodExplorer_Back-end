@@ -1,7 +1,7 @@
 {
   "_type": "export",
   "__export_format": 4,
-  "__export_date": "2023-07-13T17:44:09.608Z",
+  "__export_date": "2023-07-13T20:03:21.484Z",
   "__export_source": "insomnia.desktop.app:v2023.4.0",
   "resources": [
     {
@@ -83,7 +83,7 @@
     {
       "_id": "req_84f0b7c4772540aeb49a918bf2c33700",
       "parentId": "fld_c879ea6f199544aca2a517deb6e1e7f9",
-      "modified": 1689101889553,
+      "modified": 1689270519808,
       "created": 1688874824662,
       "url": "{{baseURL}}/a_invoices/cd",
       "name": "Create_CreditCard",
@@ -125,7 +125,7 @@
     {
       "_id": "req_24c120ff048f484ea0ada0c6fd62ac60",
       "parentId": "fld_c879ea6f199544aca2a517deb6e1e7f9",
-      "modified": 1689103417459,
+      "modified": 1689270632316,
       "created": 1689102937752,
       "url": "{{baseURL}}/a_invoices/pay_3132093576504090",
       "name": "Update",
@@ -454,7 +454,7 @@
     {
       "_id": "req_cea88ee629fd454988c51f5fc9c0ea29",
       "parentId": "fld_24b2a8f2e5a246fb9142d851d8efd291",
-      "modified": 1689194089079,
+      "modified": 1689271617051,
       "created": 1687582998478,
       "url": "{{baseURL}}/orders",
       "name": "Create",
@@ -462,7 +462,7 @@
       "method": "POST",
       "body": {
         "mimeType": "application/json",
-        "text": "{\n\t\"details\": \"detalhes\",\n\t\"plates\": [\"1\", \"2\", \"3\"]\n}"
+        "text": "{\n\t\"details\": \"detalhes\",\n\t\"plates\": [\"1\", \"2\", \"4\", \"3\"]\n}"
       },
       "parameters": [],
       "headers": [{ "name": "Content-Type", "value": "application/json" }],
@@ -548,6 +548,41 @@
       "settingRebuildPath": true,
       "settingFollowRedirects": "global",
       "_type": "request"
+    },
+    {
+      "_id": "req_2d949947735d4aedbd9a5b54221f8f18",
+      "parentId": "fld_ea89a5751e23414fb5abb00987e24c5d",
+      "modified": 1689277994078,
+      "created": 1689271964809,
+      "url": "{{baseURL}}/shopping/32",
+      "name": "CarrinhoDeCompras",
+      "description": "",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": { "type": "bearer", "token": "{{ _.USER_TOKEN }}" },
+      "metaSortKey": -1688427890195.5,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_ea89a5751e23414fb5abb00987e24c5d",
+      "parentId": "wrk_971ac9e977594cdfba1afa333f7b8c6c",
+      "modified": 1689277978601,
+      "created": 1689277960848,
+      "name": "ShoppingCart",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1664020270777,
+      "_type": "request_group"
     },
     {
       "_id": "req_d53ce9a893a64ea686c66dbeee745f24",
@@ -1231,7 +1266,7 @@
     {
       "_id": "env_feec96d094c698375329e9ca39ed3c1188f25ce8",
       "parentId": "wrk_971ac9e977594cdfba1afa333f7b8c6c",
-      "modified": 1687633402993,
+      "modified": 1689270554968,
       "created": 1640129991683,
       "name": "Base Environment",
       "data": {
