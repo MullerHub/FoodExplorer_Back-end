@@ -5,6 +5,8 @@ class FavoritesController {
     const user_id = request.user.id;
     const { plate_id } = request.params;
 
+    console.log("favorites chegando");
+
     // Verificar se o prato existe
     const plate = await knex("plates").where({ id: plate_id }).first();
     if (!plate) {

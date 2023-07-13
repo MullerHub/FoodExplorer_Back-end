@@ -61,7 +61,7 @@ class OrdersController {
       }
 
       // Verificar se o plates é um array
-      const plateIds = Object.keys(plates);
+      const plateIds = plates;
 
       // Gerar o código único
       const code = generateUniqueCodeNumber();
@@ -149,19 +149,6 @@ class OrdersController {
       if (!order) {
         return response.status(404).json({ error: "Pedido não encontrado" });
       }
-
-      // Buscar os detalhes do prato associado ao pedido
-      const plate = await knex("order_items")
-        .select("order_items.order_id", "plates.*")
-        .where("order_items.order_id", order.id)
-        .leftJoin("plates", "order_items.plates_id", "plates.id")
-        .first();
-
-      if (!plate) {
-        return response.status(404).json({ error: "Prato não encontrado" });
-      }
-
-      order.plate = plate;
 
       return response.json(order);
     } catch (error) {

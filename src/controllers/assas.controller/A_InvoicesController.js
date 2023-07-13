@@ -1,5 +1,6 @@
 const dotenv = require("dotenv");
 const request = require("request");
+const fetch = require("node-fetch");
 
 // Configuração inicial e basica para funcionar a API do ASSAS
 dotenv.config();
@@ -154,7 +155,68 @@ class A_InvoicesController {
     );
   }
 
-  async update(req, res) {}
+  async showUniques(req, res) {
+    const fetch = require("node-fetch");
+    const { id } = req.params;
+
+    const url = `https://sandbox.asaas.com/api/v3/payments/${id}`;
+    const options = {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        access_token: ACESS_TOKEN,
+      },
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const json = await response.json();
+      res.json(json);
+    } catch (err) {
+      console.error("error:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+
+  async update(req, res) {
+    const { id } = req.params;
+    const {
+      customer,
+      billingType,
+      dueDate,
+      value,
+      description,
+      externalReference,
+    } = req.body;
+
+    const url = `https://sandbox.asaas.com/api/v3/payments/${id}`;
+    const options = {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "content-type": "application/json",
+        access_token: ACESS_TOKEN,
+      },
+      body: JSON.stringify({
+        customer,
+        billingType,
+        dueDate,
+        value,
+        description,
+        externalReference,
+      }),
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const json = await response.json();
+      console.log("responseeee", response);
+      res.json(json);
+    } catch (err) {
+      console.error("error:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
 }
 
 module.exports = A_InvoicesController;

@@ -1,42 +1,55 @@
 const knex = require("../database/knex");
 
 class ShoppingCartController {
-  async addToCart(req, res) {
-    const { plate_id, quantity } = req.body;
+  async show(request, response) {
+    try {
+      const { id } = request.params;
+      const userId = request.user.id;
+      console.log("showCard chegando");
 
-    // Verificar se o prato existe na tabela "plates"
-    const [plate] = await knex("plates").where("id", plate_id).select("value");
+      const orders = await knex("orders")
+        .select(
+          "orders.id",
+          "orders.code",
+          "orders.details",
+          "orders.total_value",
+          "orders.user_id",
+          "order_statuses.status",
+        )
+        .leftJoin("order_statuses", "orders.status_id", "order_statuses.id")
+        .where("orders.id", id)
+        .andWhere("orders.user_id", userId)
+        .first();
 
-    if (!plate) {
-      return res.status(404).json({ error: "Prato não encontrado" });
+      if (!orders) {
+        return response.status(404).json({
+          error:
+            "Usuario não pode visualizar este pedido, pois ele é de outro cliente",
+        });
+      }
+
+      const plates = await knex("order_items")
+        .select(
+          "plates.title",
+          "plates.description",
+          "plates.value",
+          "order_items.amount",
+          "orders.id",
+        )
+        .join("orders", "orders.id", "order_items.order_id")
+        .join("plates", "order_items.plates_id", "plates.id")
+        .where("orders.id", id);
+
+      const orderWithPlates = {
+        ...orders,
+        plates,
+      };
+
+      return response.json(orderWithPlates);
+    } catch (error) {
+      console.error(error);
+      return response.status(500).json({ error: "Erro ao mostrar o card" });
     }
-
-    // Calcular o valor total do item no carrinho
-    const itemTotalValue = plate.value * quantity;
-
-    // Verificar se o item já existe no carrinho do usuário
-    const [cartItem] = await knex("shopping_cart")
-      .where("plate_id", plate_id)
-      .select("id", "quantity", "total_value");
-
-    if (cartItem) {
-      // Atualizar a quantidade e o valor total do item no carrinho
-      const updatedQuantity = cartItem.quantity + quantity;
-      const updatedTotalValue = cartItem.total_value + itemTotalValue;
-
-      await knex("shopping_cart")
-        .where("id", cartItem.id)
-        .update({ quantity: updatedQuantity, total_value: updatedTotalValue });
-    } else {
-      // Adicionar um novo item no carrinho
-      await knex("shopping_cart").insert({
-        plate_id,
-        quantity,
-        total_value: itemTotalValue,
-      });
-    }
-
-    return res.json({ success: true });
   }
 }
 
