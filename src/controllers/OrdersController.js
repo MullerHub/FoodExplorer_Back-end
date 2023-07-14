@@ -54,9 +54,13 @@ class OrdersController {
       // Extrair os dados da requisição
       const { details, plates } = req.body;
 
+      console.log("Request PLATES ===>>", req.body);
+
       // Verificar se todos os campos necessários foram fornecidos
       if (!status_id || !plates) {
-        return res.status(400).json({ error: "Dados incompletos" });
+        return res.status(400).json({
+          error: "Dados incompletos, erro a buscar status_id ou Plates",
+        });
       }
 
       // Verificar se o plates é um array
