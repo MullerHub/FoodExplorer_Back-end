@@ -45,12 +45,11 @@ class OrdersController {
       // Verificar se houve erros de validação nos dados da requisição
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
+        console.log("Erros de validação =>>>", errors);
         return res.status(400).json({ errors: errors.array() });
       }
-
       let status_id = "1";
       let total_value = "17.90";
-
       // Extrair os dados da requisição
       const { details, plates } = req.body;
 
@@ -109,6 +108,7 @@ class OrdersController {
           "orders.code",
           "orders.details",
           "orders.total_value",
+          "orders.created_at",
           "orders.user_id",
           "order_statuses.status",
         )
@@ -147,6 +147,7 @@ class OrdersController {
           "orders.code",
           "orders.details",
           "orders.total_value",
+          "orders.created_at",
           "orders.user_id",
           "order_statuses.status",
         )
