@@ -1,22 +1,5 @@
 const { validationResult } = require("express-validator");
 const knex = require("../database/knex");
-const crypto = require("crypto");
-
-function generateUniqueCodeHex() {
-  // Gera um número aleatório de 6 dígitos
-  const randomNumber = Math.floor(100000 + Math.random() * 900000);
-
-  // Calcula um hash MD5 do número aleatório
-  const hash = crypto
-    .createHash("md5")
-    .update(randomNumber.toString())
-    .digest("hex");
-
-  // Obtém os primeiros 6 dígitos do hash
-  const code = hash.substr(0, 6);
-
-  return code;
-}
 
 function generateUniqueCodeNumber() {
   // Gera um número aleatório de 6 dígitos
@@ -25,19 +8,35 @@ function generateUniqueCodeNumber() {
   return randomNumber.toString();
 }
 
-async function updateStatusAutomatically() {
+async function updateStatusAutomatically(knex, orderId) {
+  console.log("OorderID CHEGANDO =>", orderId);
+
+  console.log("updateStatusAutomatically CHEGANDO =>");
   const statusIds = [1, 2, 3]; // IDs dos status na ordem desejada
   let currentIndex = 0;
 
-  setInterval(() => {
+  const intervalId = setInterval(async () => {
     currentIndex = (currentIndex + 1) % statusIds.length;
     const newStatusId = statusIds[currentIndex];
 
-    // Atualize o status dos pedidos no banco de dados conforme necessário
-    // Aqui você pode usar seu código para atualizar o status_id nos pedidos
+    try {
+      // Atualize o status do pedido específico no banco de dados
+      await knex("orders")
+        .where("id", orderId)
+        .update({ status_id: newStatusId });
 
-    console.log(`Status atualizado para ${newStatusId}`);
-  }, 5 * 60 * 100); // 5 minutos em milissegundos, falta o zero no cem
+      console.log(`Status atualizado para ${newStatusId}`);
+
+      // Verificar se o novo status é igual a 3 (ou o último status)
+      if (newStatusId === 3) {
+        // Parar o setInterval quando o status for igual a 3
+        clearInterval(intervalId);
+        console.log("Atualização automática do status interrompida.");
+      }
+    } catch (error) {
+      console.error("Error updating order status:", error);
+    }
+  }, 5 * 60 * 1000); // 5 minutos em milissegundos
 }
 
 class OrdersController {
@@ -76,6 +75,11 @@ class OrdersController {
       };
 
       const [orderId] = await knex("orders").insert(order);
+
+      console.log("orders ===>", orderId);
+
+      // Chamar a função para atualizar automaticamente o status apenas para o pedido criado
+      updateStatusAutomatically(knex, orderId);
 
       // Inserir os pratos no pedido
       const orderItems = plateIds.map((plates) => ({
