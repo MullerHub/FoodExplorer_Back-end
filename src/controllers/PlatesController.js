@@ -26,12 +26,6 @@ class PlatesController {
       throw new AppError("Faltou adicionar uma imagem pelo menos!!");
     }
 
-    // Formatar o valor com vírgula em valores decimais
-    const formattedValue = parseFloat(value).toLocaleString("pt-BR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-
     // Busca de ingredientes estáticos já criados no back-end e retornado o id
     let ingredientIds = [];
     const ingredientSplit = ingredients.split(", ");
@@ -83,6 +77,18 @@ class PlatesController {
     if (!title || !value || !description) {
       throw new AppError("Não foi possivel realizar a criação do prato");
     }
+
+    // Formatar o valor com vírgula em valores decimais
+    const formattedValue = parseFloat(
+      value.replace(",", "."),
+    ); /* Aqui deixa o codigo padronizado para o BRL, porem dificulta contas no back-end
+     .toLocaleString(
+      "pt-BR",
+      {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      },
+    ); */
 
     // Criação do prato
 
@@ -165,7 +171,7 @@ class PlatesController {
 
       if (value) {
         // Formatar o valor com ponto para virgula (de 20.50 para 20,50)
-        const formattedValue = value.replace(".", ",");
+        const formattedValue = value.replace(",", ".");
         updateData.value = formattedValue;
       }
 
