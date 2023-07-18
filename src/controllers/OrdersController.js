@@ -31,6 +31,7 @@ async function updateStatusAutomatically(knex, orderId) {
       if (newStatusId === 3) {
         // Parar o setInterval quando o status for igual a 3
         clearInterval(intervalId);
+
         console.log("Atualização automática do status interrompida.");
       }
     } catch (error) {
@@ -41,6 +42,7 @@ async function updateStatusAutomatically(knex, orderId) {
 
 class OrdersController {
   async create(req, res) {
+    console.log("ID DO USER ==>", req.user.id);
     try {
       // Verificar se houve erros de validação nos dados da requisição
       const errors = validationResult(req);
@@ -48,10 +50,10 @@ class OrdersController {
         console.log("Erros de validação =>>>", errors);
         return res.status(400).json({ errors: errors.array() });
       }
+
       let status_id = "1";
-      let total_value = "17.90";
       // Extrair os dados da requisição
-      const { details, plates } = req.body;
+      const { details, plates, total_value } = req.body;
 
       console.log("Request PLATES ===>>", req.body);
 
@@ -98,7 +100,7 @@ class OrdersController {
       console.error("Error creating order:", error);
       return res.status(500).json({ error: "Internal server error" });
     }
-  }
+  } //REVISADO
 
   async index(request, response) {
     try {
@@ -134,7 +136,7 @@ class OrdersController {
       console.error(error);
       return response.status(500).json({ error: "Erro ao listar os pedidos" });
     }
-  }
+  } //REVISADO
 
   async show(request, response) {
     const { id } = request.params;
@@ -166,11 +168,11 @@ class OrdersController {
         .status(500)
         .json({ error: "Erro ao buscar os detalhes do pedido" });
     }
-  }
+  } //REVISADO
 
   async update(request, response) {
     const { id } = request.params;
-    const { status, status_id, code, details, total_value } = request.body;
+    const { details, plates, total_value } = request.body;
 
     try {
       // Verificar se o pedido existe
@@ -180,14 +182,29 @@ class OrdersController {
         return response.status(404).json({ error: "Pedido não encontrado" });
       }
 
-      // Atualizar os dados do pedido
+      // Se o total_value não foi passado na requisição, mantém o valor antigo do banco de dados
+      const updatedTotalValue =
+        total_value !== undefined ? total_value : existingOrder.total_value;
+
+      // Atualizar os dados do pedido (excluindo "plates" do update)
       await knex("orders").where("id", id).update({
-        status,
-        status_id,
-        code,
         details,
-        total_value,
+        total_value: updatedTotalValue,
       });
+
+      // Atualizar os pratos do pedido (order_items)
+      if (plates && Array.isArray(plates)) {
+        // Excluir os pratos anteriores do pedido
+        await knex("order_items").where("order_id", id).delete();
+
+        // Inserir os novos pratos no pedido
+        const orderItems = plates.map((plate) => ({
+          order_id: id,
+          plates_id: plate,
+        }));
+
+        await knex("order_items").insert(orderItems);
+      }
 
       // Buscar o pedido atualizado
       const updatedOrder = await knex("orders").where("id", id).first();
@@ -197,7 +214,7 @@ class OrdersController {
       console.error(error);
       return response.status(500).json({ error: "Erro ao atualizar o pedido" });
     }
-  }
+  } // REVISADO E PRECISA DE OUTRA REVISÃO DO FRONT
 
   async delete(request, response) {
     const { id } = request.params;
@@ -210,6 +227,9 @@ class OrdersController {
         return response.status(404).json({ error: "Pedido não encontrado" });
       }
 
+      // Excluir os registros filhos da tabela order_items associados a esse pedido
+      await knex("order_items").where("order_id", id).del();
+
       // Excluir o pedido
       await knex("orders").where("id", id).del();
 
@@ -218,7 +238,7 @@ class OrdersController {
       console.error(error);
       return response.status(500).json({ error: "Erro ao excluir o pedido" });
     }
-  }
+  } // funcionando
 }
 
 module.exports = OrdersController;
