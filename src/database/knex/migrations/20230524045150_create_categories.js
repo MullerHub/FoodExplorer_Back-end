@@ -8,10 +8,10 @@ exports.up = function (knex) {
       return knex.raw(`
       INSERT INTO categories (name)
       VALUES
-        ("Refeicao"),
-        ("Sobremesa"),
-        ("Doces"),
-        ("Bebidas")
+        ("refeicao"),
+        ("sobremesa"),
+        ("doces"),
+        ("bebidas")
     `);
     });
 };
