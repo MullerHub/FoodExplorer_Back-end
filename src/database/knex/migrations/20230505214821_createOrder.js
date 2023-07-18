@@ -11,6 +11,7 @@ exports.up = (knex) =>
     table.integer("user_id").unsigned().references("id").inTable("users");
     table.float("total_value").notNullable();
     table.timestamp("created_at").defaultTo(knex.fn.now());
+    table.timestamp("updated_at").defaultTo(knex.fn.now());
     console.log("Criada tabela de pedidos");
   });
 
