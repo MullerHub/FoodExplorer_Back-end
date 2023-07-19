@@ -3,7 +3,7 @@
   "info": {
     "title": "Documentação do FoodExplorer Back-end",
     "description": "Esta é a documentação completa das rotas do FoodExplorer",
-    "version": "0.1.0",
+    "version": "0.1.9",
     "contact": {
       "email": "murilomuller@protonmail.com"
     }
@@ -892,46 +892,42 @@
       "CreateOrder": {
         "type": "object",
         "properties": {
-          "status": {
-            "type": "string"
-          },
-          "status_id": {
-            "type": "integer"
-          },
-          "code": {
-            "type": "string"
-          },
           "details": {
-            "type": "string"
+            "type": "string",
+            "example": "Com queijo em dobro no prato um e sem ervilha no prato dois",
+            "description": "Detalhes do pedido do usuario usuário"
           },
-          "plateId": {
-            "type": "integer"
+          "total_value": {
+            "type": "number",
+            "example": "19.99"
           },
-          "userId": {
-            "type": "integer"
-          },
-          "totalValue": {
-            "type": "number"
+          "plates": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [1, 2]
           }
         }
       },
       "UpdateOrder": {
         "type": "object",
         "properties": {
-          "status": {
-            "type": "string"
-          },
-          "status_id": {
-            "type": "integer"
-          },
-          "code": {
-            "type": "string"
-          },
           "details": {
-            "type": "string"
+            "type": "string",
+            "example": "Dobro de maionese caseira",
+            "description": "Detalhes do pedido do usuario usuário atualizado"
           },
           "total_value": {
-            "type": "number"
+            "type": "number",
+            "example": "13.99"
+          },
+          "plates": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [1, 2, 3]
           }
         }
       },
