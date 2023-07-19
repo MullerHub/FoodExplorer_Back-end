@@ -1,6 +1,6 @@
 # FoodExplorer_Back-end
 
-<strong> Obs: branch main está em desenvolvimento, o deploy do back funcionando está na branch Railway_deploy_tmp </strong>
+<strong> Obs: branch main está em desenvolvimento, o deploy do back funcionando está na branch Deploy_Railway_tmp </strong>
 
 </br>
 
