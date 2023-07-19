@@ -729,7 +729,7 @@
           },
           "email": {
             "type": "string",
-            "example": "AnakinSkywalker@republicagalactica.com",
+            "example": "AnakynSkywalker@republicagalactica.com",
             "description": "The email address of the user"
           },
           "password": {
