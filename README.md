@@ -1,6 +1,11 @@
 # FoodExplorer_Back-end
 
 <strong> Obs: branch main está em desenvolvimento, o deploy do back funcionando está na branch Deploy_Railway_tmp </strong>
+Caso não saiba mudar de branch, Use o seguinte comando apos fazer o clone do repositorio (para ir para a branch do desafio final)
+
+´´´
+git checkout -b Deploy_Railway_tmp origin/Deploy_Railway_tmp
+´´´
 
 </br>
 
