@@ -13,12 +13,16 @@ git checkout -b Deploy_Railway_tmp origin/Deploy_Railway_tmp
 
 ## Documentação em inglês
 ```
-https://foodexplorerback-end-production.up.railway.app/docs/en
+https://foodexplorer-br.onrender.com/docs/en   // doc no Render (funcionando)
+https://foodexplorerback-end-production.up.railway.app/docs/en  // doc do Railway (off por enquanto, pois precisa pagar)
+)
 ```
 
-## Documentação em Português brasileiro
+## Documentação em Português brasileiro (Doc do BACK-END com swagger, todas rotas, o que for feito aqui, vai aparecer para o front, pois estão ligados os repositorios)
 ```
-https://foodexplorerback-end-production.up.railway.app/docs/pt-br/
+https://foodexplorer-br.onrender.com/docs/pt-br/
+
+https://foodexplorerback-end-production.up.railway.app/docs/pt-br    // (doc estatica, antiga, no railway, server congelado pois a versão free terminou) 
 ```
 
 </br>
