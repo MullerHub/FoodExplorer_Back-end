@@ -8,7 +8,11 @@ class PlatesController {
     const user_id = req.user.id;
     const picture = req.file.filename;
 
-    console.log("req.body ==>>", { title }, { description }, { ingredients });
+    if (typeof categories !== "string") {
+      return res.status(400).json({ error: "Categories não é uma string" });
+    }
+
+    console.log("req.body ==>>", req.body);
 
     if (!req.user.isAdmin) {
       console.log("Valor de req.user.isAdmin:", req.user);
