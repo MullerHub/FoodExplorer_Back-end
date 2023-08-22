@@ -111,6 +111,7 @@ class OrdersController {
           "orders.details",
           "orders.total_value",
           "orders.created_at",
+          "orders.status_id",
           "orders.user_id",
           "order_statuses.status",
         )
