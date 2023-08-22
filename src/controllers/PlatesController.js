@@ -52,13 +52,6 @@ class PlatesController {
       }),
     );
 
-    // Verificar se pelo menos uma categoria foi fornecida
-    if (!categories || categories.length === 0) {
-      return res
-        .status(400)
-        .json({ error: "Não foi passado nenhuma categoria" });
-    }
-
     // Verificar se categories é uma string
     if (typeof categories !== "string") {
       return res.status(400).json({ error: "Categories não é uma string" });
