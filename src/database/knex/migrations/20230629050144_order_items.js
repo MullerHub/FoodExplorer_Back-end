@@ -1,4 +1,4 @@
-//  DESATIVADO POR ENQUANTO INUTIL
+//  DESATIVADO, POR ENQUANTO INUTIL
 exports.up = (knex) =>
   knex.schema.createTable("order_items", (table) => {
     table.increments("id");

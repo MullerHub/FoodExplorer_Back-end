@@ -9,9 +9,9 @@ function generateUniqueCodeNumber() {
 }
 
 async function updateStatusAutomatically(knex, orderId) {
-  console.log("OorderID CHEGANDO =>", orderId);
+  console.log("OorderID CHEGANDO =>");
 
-  console.log("updateStatusAutomatically CHEGANDO =>");
+  console.log("updateStatusAutomatically CHEGANDO =>", orderId);
   const statusIds = [1, 2, 3]; // IDs dos status na ordem desejada
   let currentIndex = 0;
 
@@ -23,7 +23,7 @@ async function updateStatusAutomatically(knex, orderId) {
       // Atualize o status do pedido específico no banco de dados
       await knex("orders")
         .where("id", orderId)
-        .update({ status_id: newStatusId });
+        .update({ status_id: newStatusId, updated_at: knex.fn.now() });
 
       console.log(`Status atualizado para ${newStatusId}`);
 
@@ -37,7 +37,7 @@ async function updateStatusAutomatically(knex, orderId) {
     } catch (error) {
       console.error("Error updating order status:", error);
     }
-  }, 5 * 60 * 1000); // 5 minutos em milissegundos
+  }, 5 * 60 * 100); // 30 segundos
 }
 
 class OrdersController {
